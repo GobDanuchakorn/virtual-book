@@ -307,7 +307,7 @@
         if (!vid) {
           vid = document.createElement("video");
           vid.className = "page-video-overlay";
-          vid.src = "./static/videos/page3_demo.mp4?v=12";
+          vid.src = "./static/videos/page3_demo.mp4?v=14";
           vid.autoplay = true;
           vid.loop = true;
           vid.muted = true;
