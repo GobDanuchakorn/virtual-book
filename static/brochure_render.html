@@ -245,10 +245,15 @@
       </div>
     </div>
 
-    <!-- Nano Banana Hero Illustration -->
+    <!-- Nano Banana Hero Illustration + Animated Ultrasound Callout Overlay -->
     <div style="position:relative; display:flex; align-items:center; justify-content:center; margin:6px 0; z-index:5;">
-      <div class="illu-frame" style="width:940px; height:520px; border-radius:26px;">
-        <img src="illustrations/cover_hero.jpg" alt="Doctor explaining breast ultrasound biopsy to patient" style="object-position: center 22%;" />
+      <div class="illu-frame" style="position:relative; width:940px; height:520px; border-radius:26px;">
+        <img id="p1-hero-img" src="illustrations/cover_hero.jpg" alt="Doctor explaining breast ultrasound biopsy to patient" style="object-position: center 22%;" />
+        <!-- Animated ultrasound wave pulse inside the circular breast callout -->
+        <svg viewBox="0 0 940 520" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none;">
+          <circle id="p1-wave-1" cx="483" cy="186" r="14" fill="none" stroke="#e24e91" stroke-width="3" opacity="0.7" />
+          <circle id="p1-wave-2" cx="483" cy="186" r="24" fill="none" stroke="#614193" stroke-width="2.5" opacity="0.45" />
+        </svg>
       </div>
 
       <div class="card-clean" style="position:absolute; left:14px; bottom:18px; padding:14px 22px; border:1.5px solid #f4c6db;">
@@ -328,10 +333,24 @@
       </div>
     </div>
 
-    <!-- Clean White Card with Circular Diagram -->
+    <!-- Clean White Card with Animated Circular Ultrasound Biopsy Diagram -->
     <div class="card-clean" style="display:grid; grid-template-columns: 320px 1fr; gap:26px; padding:22px 26px; align-items:center;">
-      <div class="illu-frame" style="width:310px; height:310px; border-radius:50%; border:4px solid #f4c6db;">
+      <div class="illu-frame" style="position:relative; width:310px; height:310px; border-radius:50%; border:4px solid #f4c6db;">
         <img src="illustrations/ultrasound_biopsy_diagram.jpg" alt="Ultrasound-guided core needle biopsy diagram" />
+        <!-- Animated sound waves & moving core needle demo -->
+        <svg viewBox="0 0 310 310" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none;">
+          <g id="p2-waves" stroke="#e24e91" fill="none" stroke-linecap="round">
+            <path id="p2-w1" d="M 142 126 Q 160 142 184 134" stroke-width="3" opacity="0.85" />
+            <path id="p2-w2" d="M 134 142 Q 158 162 190 152" stroke-width="2.8" opacity="0.65" />
+            <path id="p2-w3" d="M 126 158 Q 156 182 196 170" stroke-width="2.5" opacity="0.45" />
+          </g>
+          <circle id="p2-nodule-ring" cx="148" cy="186" r="18" fill="none" stroke="#e24e91" stroke-width="3" opacity="0.7" />
+          <g id="p2-needle-group">
+            <line x1="278" y1="138" x2="165" y2="178" stroke="#ffffff" stroke-width="6" stroke-linecap="round" opacity="0.7" />
+            <line x1="278" y1="138" x2="165" y2="178" stroke="#614193" stroke-width="3.2" stroke-linecap="round" />
+            <circle cx="165" cy="178" r="3.5" fill="#e24e91" />
+          </g>
+        </svg>
       </div>
 
       <div style="display:flex; flex-direction:column; gap:12px;">
@@ -415,9 +434,14 @@
       </div>
     </div>
 
-    <!-- Nano Banana Procedure Scene Banner -->
-    <div class="illu-frame" style="height:310px; border-radius:24px;">
+    <!-- Nano Banana Procedure Scene Banner + Animated Monitor Pulse -->
+    <div class="illu-frame" style="position:relative; height:310px; border-radius:24px;">
       <img src="illustrations/procedure_scene.jpg" alt="Doctor performing ultrasound-guided breast checkup" style="object-position: center 35%;" />
+      <svg viewBox="0 0 940 310" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none;">
+        <!-- Subtle ultrasound scan beam over monitor & probe -->
+        <ellipse id="p3-scan-glow" cx="732" cy="108" rx="46" ry="28" fill="#e24e91" opacity="0.18" />
+        <circle id="p3-probe-pulse" cx="426" cy="148" r="14" fill="none" stroke="#e24e91" stroke-width="3" opacity="0.7" />
+      </svg>
     </div>
 
     <!-- Clean 2x2 White Cards (NO ugly left border bars) -->
@@ -501,8 +525,12 @@
 
     <!-- Clean Split: Illustration + Notebook Card (inspired by "การดูแลสุขภาพเต้านม" in image-2.png) -->
     <div style="display:grid; grid-template-columns: 380px 1fr; gap:20px; align-items:stretch; z-index:5;">
-      <div class="illu-frame" style="border-radius:22px; height:100%; background:#fdf4ee; display:flex; align-items:center; justify-content:center;">
+      <div class="illu-frame" style="position:relative; border-radius:22px; height:100%; background:#fdf4ee; display:flex; align-items:center; justify-content:center;">
         <img src="illustrations/aftercare_scene.jpg" alt="Doctor advising patient on breast biopsy aftercare" style="object-fit: contain; width:100%; height:100%;" />
+        <svg viewBox="0 0 380 420" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none;">
+          <circle id="p4-icon-1" cx="322" cy="140" r="34" fill="none" stroke="#614193" stroke-width="3" opacity="0.6" />
+          <circle id="p4-icon-2" cx="322" cy="222" r="34" fill="none" stroke="#e24e91" stroke-width="3" opacity="0.6" />
+        </svg>
       </div>
 
       <div class="notebook-card" style="display:flex; flex-direction:column;">
@@ -571,6 +599,75 @@
   const p = params.get("page") || "1";
   const target = document.getElementById("page-" + p);
   if (target) target.classList.add("active");
+
+  function applyPhase(t) {
+    // t in [0, 1)
+    const s = 0.5 * (1 - Math.cos(2 * Math.PI * t)); // smooth 0 -> 1 -> 0
+    const wave1 = (t) % 1;
+    const wave2 = (t + 0.5) % 1;
+
+    // Page 1: ultrasound callout wave rings
+    const p1w1 = document.getElementById("p1-wave-1");
+    const p1w2 = document.getElementById("p1-wave-2");
+    if (p1w1 && p1w2) {
+      p1w1.setAttribute("r", (10 + wave1 * 28).toFixed(1));
+      p1w1.setAttribute("opacity", (0.85 * (1 - wave1)).toFixed(2));
+      p1w2.setAttribute("r", (10 + wave2 * 28).toFixed(1));
+      p1w2.setAttribute("opacity", (0.85 * (1 - wave2)).toFixed(2));
+    }
+
+    // Page 2: animated ultrasound waves + moving core biopsy needle
+    const p2w1 = document.getElementById("p2-w1");
+    const p2w2 = document.getElementById("p2-w2");
+    const p2w3 = document.getElementById("p2-w3");
+    const p2ring = document.getElementById("p2-nodule-ring");
+    const p2needle = document.getElementById("p2-needle-group");
+    if (p2w1 && p2needle) {
+      p2w1.setAttribute("opacity", (0.25 + 0.75 * Math.abs(Math.sin(Math.PI * ((t * 2) % 1)))).toFixed(2));
+      p2w2.setAttribute("opacity", (0.25 + 0.75 * Math.abs(Math.sin(Math.PI * ((t * 2 + 0.33) % 1)))).toFixed(2));
+      p2w3.setAttribute("opacity", (0.25 + 0.75 * Math.abs(Math.sin(Math.PI * ((t * 2 + 0.66) % 1)))).toFixed(2));
+      // Needle glides gently toward nodule (-18px, +6.4px) and retracts
+      const dx = -18 * s;
+      const dy = 6.4 * s;
+      p2needle.setAttribute("transform", `translate(${dx.toFixed(2)}, ${dy.toFixed(2)})`);
+      p2ring.setAttribute("r", (16 + 7 * s).toFixed(1));
+      p2ring.setAttribute("opacity", (0.35 + 0.55 * s).toFixed(2));
+    }
+
+    // Page 3: monitor glow + probe pulse
+    const p3glow = document.getElementById("p3-scan-glow");
+    const p3pulse = document.getElementById("p3-probe-pulse");
+    if (p3glow && p3pulse) {
+      p3glow.setAttribute("opacity", (0.10 + 0.24 * s).toFixed(2));
+      p3pulse.setAttribute("r", (8 + wave1 * 24).toFixed(1));
+      p3pulse.setAttribute("opacity", (0.85 * (1 - wave1)).toFixed(2));
+    }
+
+    // Page 4: aftercare icon rings
+    const p4i1 = document.getElementById("p4-icon-1");
+    const p4i2 = document.getElementById("p4-icon-2");
+    if (p4i1 && p4i2) {
+      p4i1.setAttribute("r", (32 + 5 * s).toFixed(1));
+      p4i1.setAttribute("opacity", (0.35 + 0.55 * s).toFixed(2));
+      const s2 = 0.5 * (1 - Math.cos(2 * Math.PI * ((t + 0.5) % 1)));
+      p4i2.setAttribute("r", (32 + 5 * s2).toFixed(1));
+      p4i2.setAttribute("opacity", (0.35 + 0.55 * s2).toFixed(2));
+    }
+  }
+
+  const frameParam = params.get("frame");
+  if (frameParam !== null) {
+    const idx = parseFloat(frameParam) || 0;
+    const total = parseFloat(params.get("total")) || 16;
+    applyPhase((idx % total) / total);
+  } else {
+    const start = performance.now();
+    function loop(now) {
+      applyPhase(((now - start) % 2000) / 2000);
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  }
 </script>
 </body>
 </html>
