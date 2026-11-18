@@ -174,7 +174,7 @@ def ensure_demo_book(books_dir: Path, force: bool = False) -> None:
     meta_path = book_dir / "meta.json"
     if meta_path.exists() and not force:
         meta = json.loads(meta_path.read_text(encoding="utf-8"))
-        if meta.get("edition") == "nano-banana-lavender-pink-v7":
+        if meta.get("edition") in {"nano-banana-lavender-pink-v7", "nano-banana-clean-v8"}:
             return
 
     pages_dir = book_dir / "pages"
