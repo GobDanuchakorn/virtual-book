@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Virtual Book</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <!-- Top Toolbar (FlippingBook White Skin style) -->
+    <header id="top" class="top-toolbar">
+      <div class="topbar-left">
+        <button id="btn-library" class="tb-btn tb-text-btn" title="Book Library" aria-label="Book Library">
+          <svg viewBox="0 0 24 24" class="icon"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          <span class="hide-sm">Library</span>
+        </button>
+        <h1 id="book-title" class="toolbar-title" title="Virtual Book">Loading...</h1>
+        <button id="btn-upload" class="tb-btn tb-primary-btn" title="Upload PDF or Images">
+          <svg viewBox="0 0 24 24" class="icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <span class="hide-sm">Upload Book</span>
+        </button>
+      </div>
+
+      <div class="topbar-pager">
+        <label class="pager" for="page-input">
+          <span class="pager-label hide-sm">page</span>
+          <input id="page-input" type="text" inputmode="numeric" value="1" aria-label="Enter page number" />
+          <span id="page-total" class="pager-total">/ 1</span>
+        </label>
+      </div>
+
+      <nav class="topbar-actions" aria-label="Viewer tools">
+        <button id="btn-collab" class="tb-btn tb-text-btn" title="Co-reading &amp; Live Sync" aria-label="Co-reading">
+          <span class="live-dot"></span>
+          <span id="collab-label" class="hide-sm">Co-Read</span>
+        </button>
+        <button id="btn-search" class="tb-btn" title="Search" aria-label="Search" aria-expanded="false">
+          <svg viewBox="0 0 24 24" class="icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <button id="btn-thumbs" class="tb-btn" title="Thumbnails" aria-label="Thumbnails" aria-expanded="false">
+          <svg viewBox="0 0 24 24" class="icon"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        </button>
+        <button id="btn-notes" class="tb-btn" title="Notes" aria-label="Notes" aria-expanded="false">
+          <svg viewBox="0 0 24 24" class="icon"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
+          <span id="notes-badge" class="badge hidden">0</span>
+        </button>
+        <button id="btn-share" class="tb-btn" title="Share" aria-label="Share">
+          <svg viewBox="0 0 24 24" class="icon"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </button>
+        <button id="btn-print" class="tb-btn hide-sm" title="Print" aria-label="Print">
+          <svg viewBox="0 0 24 24" class="icon"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        </button>
+        <button id="btn-download" class="tb-btn" title="Download" aria-label="Download">
+          <svg viewBox="0 0 24 24" class="icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </button>
+        <button id="btn-sound" class="tb-btn" title="Mute flip sound" aria-label="Mute">
+          <svg id="icon-sound-on" viewBox="0 0 24 24" class="icon"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+          <svg id="icon-sound-off" viewBox="0 0 24 24" class="icon hidden"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+        </button>
+        <button id="btn-zoom" class="tb-btn" title="Zoom in" aria-label="Zoom in">
+          <svg id="icon-zoom-in" viewBox="0 0 24 24" class="icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          <svg id="icon-zoom-out" viewBox="0 0 24 24" class="icon hidden"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        </button>
+        <button id="btn-fullscreen" class="tb-btn" title="Fullscreen" aria-label="Fullscreen">
+          <svg viewBox="0 0 24 24" class="icon"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+        </button>
+      </nav>
+    </header>
+
+    <!-- Workspace Area: Optional Sidebars + Book Stage -->
+    <div class="workspace">
+      <!-- Left Sidebar (Thumbnails / Search) -->
+      <aside id="left-sidebar" class="sidebar sidebar-left hidden" aria-label="Navigation sidebar">
+        <div class="sidebar-header">
+          <h2 id="left-sidebar-title">Thumbnails</h2>
+          <button id="close-left-sidebar" class="icon-close" aria-label="Close sidebar">&times;</button>
+        </div>
+
+        <!-- Thumbnails Panel -->
+        <div id="panel-thumbs" class="sidebar-body">
+          <div id="thumbs-grid" class="thumbs-grid"></div>
+        </div>
+
+        <!-- Search Panel -->
+        <div id="panel-search" class="sidebar-body hidden">
+          <form id="search-form" class="search-form">
+            <input id="search-input" type="search" placeholder="Search text in book..." autocomplete="off" />
+            <button type="submit">Go</button>
+          </form>
+          <div id="search-status" class="muted-note">Type a keyword to search pages.</div>
+          <div id="search-results" class="search-results"></div>
+        </div>
+      </aside>
+
+      <!-- Main Book Stage -->
+      <main id="stage" class="stage">
+        <button id="btn-first" class="nav-arrow nav-edge-left-outer hide-sm" title="First page" aria-label="First page">
+          <svg viewBox="0 0 24 24" class="icon"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <button id="btn-prev" class="nav-arrow nav-prev" title="Previous page" aria-label="Previous page">
+          <svg viewBox="0 0 24 24" class="icon-lg"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+
+        <div id="book-viewport" class="book-viewport">
+          <div id="book-pan-layer" class="book-pan-layer">
+            <div id="book-cover-frame" class="book-cover-frame is-cover">
+              <div id="stack-left" class="paper-stack paper-stack-left hidden"></div>
+              <div id="book-container" class="book-container single-cover">
+                <!-- Left Page -->
+                <div id="page-left-slot" class="page-slot page-left hidden">
+                  <img id="img-left" alt="Left page" draggable="false" />
+                  <div id="pins-left" class="pins-layer"></div>
+                  <div class="page-shadow-left"></div>
+                  <div class="corner-curl corner-curl-left"></div>
+                  <div class="click-zone click-zone-left" title="Previous page (or drag)"></div>
+                </div>
+
+                <!-- Spine -->
+                <div id="book-spine" class="book-spine hidden">
+                  <div class="spine-ribbon"></div>
+                </div>
+
+                <!-- Right Page -->
+                <div id="page-right-slot" class="page-slot page-right">
+                  <img id="img-right" alt="Right page" draggable="false" />
+                  <div id="pins-right" class="pins-layer"></div>
+                  <div class="page-shadow-right"></div>
+                  <div class="corner-curl corner-curl-right"></div>
+                  <div class="click-zone click-zone-right" title="Next page (or drag)"></div>
+                </div>
+
+                <!-- Cast shadow beneath turning leaf -->
+                <div id="flip-drop-shadow" class="flip-drop-shadow hidden"></div>
+
+                <!-- Real-Time Conical Paper-Fold Canvas Overlay -->
+                <canvas id="fold-canvas" class="fold-canvas hidden"></canvas>
+
+                <!-- 3D Flip Animation Leaf -->
+                <div id="flip-leaf" class="flip-leaf hidden">
+                  <div class="flip-face flip-front">
+                    <img id="flip-front-img" alt="" draggable="false" />
+                    <div id="flip-front-shade" class="flip-shade"></div>
+                  </div>
+                  <div class="flip-face flip-back">
+                    <img id="flip-back-img" alt="" draggable="false" />
+                    <div id="flip-back-shade" class="flip-shade"></div>
+                  </div>
+                </div>
+              </div>
+              <div id="stack-right" class="paper-stack paper-stack-right"></div>
+            </div>
+          </div>
+        </div>
+
+        <button id="btn-next" class="nav-arrow nav-next" title="Next page" aria-label="Next page">
+          <svg viewBox="0 0 24 24" class="icon-lg"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <button id="btn-last" class="nav-arrow nav-edge-right-outer hide-sm" title="Last page" aria-label="Last page">
+          <svg viewBox="0 0 24 24" class="icon"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
+        </button>
+
+        <!-- Bottom Floating Controls -->
+        <div class="stage-footer">
+          <button id="btn-ask-ai-pill" class="pill-btn pill-ai" title="Generate an AI Co-Reader summary pin for this page">
+            <svg viewBox="0 0 24 24" class="icon-sm"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span>AI Co-Reader</span>
+          </button>
+          <button id="btn-pin-mode" class="pill-btn" title="Click anywhere on a page to drop a note pin">
+            <svg viewBox="0 0 24 24" class="icon-sm"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span id="pin-mode-label">Pin on page</span>
+          </button>
+          <button id="btn-add-note-pill" class="pill-btn" title="Add note to current page">
+            <svg viewBox="0 0 24 24" class="icon-sm"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            <span>Add note</span>
+          </button>
+          <div id="zoom-pill" class="pill-btn hidden">
+            <button id="btn-zoom-reset" type="button" title="Reset zoom">100%</button>
+          </div>
+        </div>
+      </main>
+
+      <!-- Right Sidebar (Collaborative Notes) -->
+      <aside id="right-sidebar" class="sidebar sidebar-right hidden" aria-label="Notes sidebar">
+        <div class="sidebar-header">
+          <h2>Collaborative Notes</h2>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <button id="btn-export-annotated" type="button" class="btn-ai-chip" title="Export PDF with all pins &amp; replies embedded">Export PDF</button>
+            <button id="close-right-sidebar" class="icon-close" aria-label="Close notes">&times;</button>
+          </div>
+        </div>
+        <div class="sidebar-body">
+          <div class="ai-preset-bar">
+            <div class="ai-preset-label">Gobg AI Co-Reader (Current Page)</div>
+            <div class="ai-preset-btns">
+              <button type="button" class="btn-ai-chip" data-ai-prompt="Summarize Page">Summarize</button>
+              <button type="button" class="btn-ai-chip" data-ai-prompt="Key Clinical Takeaways">Takeaways</button>
+              <button type="button" class="btn-ai-chip" data-ai-prompt="Action Checklist">Checklist</button>
+            </div>
+          </div>
+          <form id="note-form" class="note-form">
+            <div class="note-form-row">
+              <label for="note-page-select">Page</label>
+              <select id="note-page-select"></select>
+              <label for="note-author-select">As</label>
+              <select id="note-author-select">
+                <option value="Dan">Dan</option>
+                <option value="Gobg AI">Gobg AI</option>
+                <option value="Hermes">Hermes</option>
+              </select>
+            </div>
+            <div id="pin-coords-hint" class="muted-note hidden">Pinning at selected spot on page</div>
+            <textarea id="note-text" rows="3" placeholder="Write a collaborative note..." required></textarea>
+            <button type="submit" class="btn-solid">Save Note</button>
+          </form>
+          <div id="notes-list" class="notes-list"></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Upload Modal -->
+  <div id="modal-upload" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="upload-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="upload-modal-title">Create Virtual Book</h2>
+        <button class="icon-close" data-close-modal="modal-upload" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-tabs">
+        <button id="tab-pdf" class="tab-btn active" type="button">PDF File</button>
+        <button id="tab-images" class="tab-btn" type="button">Image Pages</button>
+      </div>
+      <form id="upload-form" class="modal-body">
+        <label class="field-label" for="upload-title">Book Title (optional)</label>
+        <input id="upload-title" type="text" placeholder="e.g. Clinic Handbook 2026" />
+
+        <div id="dropzone" class="dropzone">
+          <input id="upload-file-input" type="file" accept=".pdf" />
+          <p id="dropzone-label"><strong>Click to choose a PDF</strong> or drag and drop here</p>
+          <span id="dropzone-sub" class="muted-note">Pages are rendered at high DPI with full-text search</span>
+        </div>
+
+        <div id="upload-status" class="upload-status hidden"></div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-ghost" data-close-modal="modal-upload">Cancel</button>
+          <button id="btn-submit-upload" type="submit" class="btn-solid">Convert to Virtual Book</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Library Modal -->
+  <div id="modal-library" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="library-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="library-modal-title">Book Library</h2>
+        <button class="icon-close" data-close-modal="modal-library" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="library-list" class="library-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Share Modal -->
+  <div id="modal-share" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="share-modal-title">
+    <div class="modal-card modal-card-sm">
+      <div class="modal-header">
+        <h2 id="share-modal-title">Share Virtual Book</h2>
+        <button class="icon-close" data-close-modal="modal-share" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="muted-note">Direct link to the current page:</p>
+        <div class="share-row">
+          <input id="share-url-input" type="text" readonly />
+          <button id="btn-copy-share" type="button" class="btn-solid">Copy</button>
+        </div>
+        <div id="share-copied-msg" class="muted-note hidden">Copied to clipboard!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Co-Reading Modal -->
+  <div id="modal-collab" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="collab-modal-title">
+    <div class="modal-card modal-card-sm">
+      <div class="modal-header">
+        <h2 id="collab-modal-title">Co-Reading &amp; Live Sync</h2>
+        <button class="icon-close" data-close-modal="modal-collab" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <label class="field-label" for="reader-name-input">Your Reader Name</label>
+        <input id="reader-name-input" type="text" value="Dan" placeholder="e.g. Dan" />
+
+        <label class="sync-toggle">
+          <input id="follow-sync-checkbox" type="checkbox" />
+          <span>Auto-follow active collaborator's page</span>
+        </label>
+
+        <div>
+          <div class="field-label" style="margin-bottom:6px;">Active Readers</div>
+          <div id="active-readers-list" class="library-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+[
+  {
+    "id": "note-hermes-01",
+    "page": 3,
+    "author": "Hermes",
+    "text": "A coronary calcium score of zero does not rule out heart risk. Read it alongside lipid particle counts and blood pressure.",
+    "color": "hermes",
+    "x": 30.0,
+    "y": 35.0,
+    "replies": [],
+    "created_at": "2026-11-18T17:02:34+07:00"
+  },
+  {
+    "id": "note-hermes-02",
+    "page": 4,
+    "author": "Hermes",
+    "text": "Most adults eat well under 30 g of fibre a day. Raise intake gradually to limit bloating.",
+    "color": "hermes",
+    "x": 40.0,
+    "y": 50.0,
+    "replies": [],
+    "created_at": "2026-11-18T17:02:34+07:00"
+  },
+  {
+    "id": "note-hermes-03",
+    "page": 5,
+    "author": "Hermes",
+    "text": "A cool, dark bedroom (about 18–19°C) is one of the simplest sleep levers. Judge it by your own sleep log, not by a single night.",
+    "color": "hermes",
+    "x": 35.0,
+    "y": 40.0,
+    "replies": [],
+    "created_at": "2026-11-18T17:02:34+07:00"
+  },
+  {
+    "id": "note-hermes-04",
+    "page": 6,
+    "author": "Hermes",
+    "text": "Zone 2 should still let you speak in full sentences. It builds the aerobic base that later raises VO2 peak.",
+    "color": "hermes",
+    "x": 45.0,
+    "y": 55.0,
+    "replies": [],
+    "created_at": "2026-11-18T17:02:34+07:00"
+  },
+  {
+    "id": "note-hermes-05",
+    "page": 7,
+    "author": "Hermes",
+    "text": "A 4 s inhale and 6–8 s exhale is about 6 breaths a minute, the pace where heart rate variability often rises. Do it for 3 minutes, not longer.",
+    "color": "hermes",
+    "x": 50.0,
+    "y": 45.0,
+    "replies": [],
+    "created_at": "2026-11-18T17:02:34+07:00"
+  },
+  {
+    "id": "note-hermes-06",
+    "page": 8,
+    "author": "Hermes",
+    "text": "The charter works best as habits you review each quarter, not as a one-time checklist.",
+    "color": "hermes",
+    "x": 30.0,
+    "y": 60.0,
+    "replies": [],
+    "created_at": "2026-11-18T17:02:34+07:00"
+  }
+]
