@@ -1882,3 +1882,8 @@ html, body {
   color: #ffffff;
   border: 1px solid #c48b71;
 }
+
+/* Use Kanit font across the entire Virtual Book UI */
+html, body, button, input, select, textarea, .toolbar-title {
+  font-family: "Kanit", "Segoe UI", system-ui, -apple-system, sans-serif !important;
+}
