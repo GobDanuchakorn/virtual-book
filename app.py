@@ -25,6 +25,9 @@ BOOKS_DIR = DATA_DIR / "books"
 
 ALLOWED_IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".gif"}
 MAX_UPLOAD_MB = 100
+MAX_PDF_PAGES = 120
+MAX_UPLOAD_IMAGES = 120
+Image.MAX_IMAGE_PIXELS = 25_000_000
 
 
 def _natural_sort_key(name: str) -> list[int | str]:
@@ -51,7 +54,29 @@ def _save_json(path: Path, data) -> None:
     os.replace(tmp_path, path)
 
 
-PHI_PATTERN = re.compile(r"\b(HN\s*[:#-]?\s*\d{5,10}|DOB\s*[:#-]?\s*\d{1,4}[/-]\d{1,2}[/-]\d{1,4}|MRN\s*[:#-]?\s*\d{5,10})\b", re.IGNORECASE)
+PHI_PATTERN = re.compile(
+    r"(\b(HN|MRN)\s*[:#-]?\s*\d{5,10}\b"
+    r"|\bDOB\s*[:#-]?\s*\d{1,4}[/-]\d{1,2}[/-]\d{1,4}\b"
+    r"|\b\d{1}-?\d{4}-?\d{5}-?\d{2}-?\d{1}\b"
+    r"|เลขประจำตัวผู้ป่วย|เลขบัตรประชาชน|ชื่อ-สกุล)",
+    re.IGNORECASE,
+)
+
+
+def _write_audit_log(audit_path: Path, action: str, book_id: str, actor: str = "system", **extra) -> None:
+    try:
+        entry = {
+            "ts": datetime.now(timezone.utc).isoformat(),
+            "action": action,
+            "book_id": book_id,
+            "actor": actor,
+            "ip": request.remote_addr if request else None,
+            **extra,
+        }
+        with audit_path.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    except Exception:
+        pass
 
 
 def _book_payload(book_dir: Path) -> dict | None:
@@ -91,9 +116,35 @@ def create_app(books_dir: Path | None = None) -> Flask:
     target_books_dir.mkdir(parents=True, exist_ok=True)
     ensure_demo_book(target_books_dir)
 
-    # In-memory co-reading presence per book_id: { book_id: { reader_name: { page, updated_at } } }
-    co_reading_sessions: dict[str, dict[str, dict]] = {}
-    notes_lock = threading.Lock()
+    # Thread-safe per-book locks & isolated co-reading presence: { (book_id, room_id): { reader: { page, updated_at, ts } } }
+    co_reading_sessions: dict[tuple[str, str], dict[str, dict]] = {}
+    sessions_lock = threading.Lock()
+    book_locks: dict[str, threading.Lock] = {}
+    book_locks_guard = threading.Lock()
+    audit_log_path = target_books_dir.parent / "audit.log"
+
+    def get_book_lock(book_id: str) -> threading.Lock:
+        with book_locks_guard:
+            if book_id not in book_locks:
+                book_locks[book_id] = threading.Lock()
+            return book_locks[book_id]
+
+    @app.after_request
+    def apply_security_headers(resp):
+        resp.headers.setdefault("X-Content-Type-Options", "nosniff")
+        resp.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
+        resp.headers.setdefault("Referrer-Policy", "no-referrer")
+        resp.headers.setdefault(
+            "Content-Security-Policy",
+            "default-src 'self'; "
+            "script-src 'self' https://cdnjs.cloudflare.com; "
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+            "font-src 'self' https://fonts.gstatic.com; "
+            "img-src 'self' data: blob:; "
+            "media-src 'self' blob:; "
+            "connect-src 'self';",
+        )
+        return resp
 
     @app.get("/")
     def index():
@@ -130,7 +181,10 @@ def create_app(books_dir: Path | None = None) -> Flask:
         filename = f"page_{page_num:03d}.webp"
         if not (pages_dir / filename).exists():
             return jsonify({"error": "Page not found"}), 404
-        return send_from_directory(pages_dir, filename)
+        resp = send_from_directory(pages_dir, filename)
+        if book_id != "demo-wellness-guide":
+            resp.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+        return resp
 
     @app.get("/api/books/<raw_id>/thumbs/<int:page_num>")
     def get_thumb_image(raw_id: str, page_num: int):
@@ -141,7 +195,10 @@ def create_app(books_dir: Path | None = None) -> Flask:
         filename = f"thumb_{page_num:03d}.webp"
         if not (thumbs_dir / filename).exists():
             return jsonify({"error": "Thumbnail not found"}), 404
-        return send_from_directory(thumbs_dir, filename)
+        resp = send_from_directory(thumbs_dir, filename)
+        if book_id != "demo-wellness-guide":
+            resp.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+        return resp
 
     @app.post("/api/books/upload-pdf")
     def upload_pdf():
@@ -174,6 +231,10 @@ def create_app(books_dir: Path | None = None) -> Flask:
             doc.close()
             shutil.rmtree(book_dir, ignore_errors=True)
             return jsonify({"error": "PDF has no pages"}), 400
+        if doc.page_count > MAX_PDF_PAGES:
+            doc.close()
+            shutil.rmtree(book_dir, ignore_errors=True)
+            return jsonify({"error": f"PDF exceeds maximum allowed {MAX_PDF_PAGES} pages"}), 400
 
         text_records = []
         try:
@@ -207,6 +268,7 @@ def create_app(books_dir: Path | None = None) -> Flask:
         _save_json(book_dir / "meta.json", meta)
         _save_json(book_dir / "text.json", text_records)
         _save_json(book_dir / "notes.json", [])
+        _write_audit_log(audit_log_path, "upload_pdf", book_id, pages=page_count)
 
         return jsonify(_book_payload(book_dir)), 201
 
@@ -218,6 +280,8 @@ def create_app(books_dir: Path | None = None) -> Flask:
         ]
         if not valid_files:
             return jsonify({"error": "No valid image files provided (PNG, JPG, WebP)"}), 400
+        if len(valid_files) > MAX_UPLOAD_IMAGES:
+            return jsonify({"error": f"Maximum {MAX_UPLOAD_IMAGES} images per upload"}), 400
 
         valid_files.sort(key=lambda f: _natural_sort_key(Path(f.filename).name))
         title = (request.form.get("title") or "").strip() or "Uploaded Image Book"
@@ -312,16 +376,29 @@ def create_app(books_dir: Path | None = None) -> Flask:
 
         body = request.get_json(silent=True) or {}
         text = (body.get("text") or "").strip()
-        page = int(body.get("page") or 1)
+        try:
+            page = max(1, int(body.get("page") or 1))
+        except (TypeError, ValueError):
+            return jsonify({"error": "Invalid page number"}), 400
         author = (body.get("author") or "Reader").strip()[:40] or "Reader"
         color = (body.get("color") or ("hermes" if author.lower().startswith("hermes") else "amber")).strip()
         x = body.get("x")
         y = body.get("y")
         if not text:
             return jsonify({"error": "Note text is required"}), 400
+        if PHI_PATTERN.search(text) and not body.get("confirm_phi"):
+            return jsonify({
+                "error": "Possible patient identifier (HN/MRN/DOB/Thai ID) detected in note. Remove PHI before saving."
+            }), 422
+
+        try:
+            fx = round(max(0.0, min(100.0, float(x))), 2) if x is not None else None
+            fy = round(max(0.0, min(100.0, float(y))), 2) if y is not None else None
+        except (TypeError, ValueError):
+            return jsonify({"error": "Invalid pin coordinates"}), 400
 
         notes_path = book_dir / "notes.json"
-        with notes_lock:
+        with get_book_lock(book_id):
             notes = _load_json(notes_path, [])
             note = {
                 "id": f"note-{uuid.uuid4().hex[:8]}",
@@ -329,13 +406,14 @@ def create_app(books_dir: Path | None = None) -> Flask:
                 "author": author,
                 "text": text,
                 "color": color,
-                "x": float(x) if x is not None else None,
-                "y": float(y) if y is not None else None,
+                "x": fx,
+                "y": fy,
                 "replies": [],
                 "created_at": datetime.now(timezone.utc).isoformat(),
             }
             notes.append(note)
             _save_json(notes_path, notes)
+        _write_audit_log(audit_log_path, "add_note", book_id, actor=author, page=page)
         return jsonify({"note": note, "notes": notes}), 201
 
     @app.post("/api/books/<raw_id>/notes/<note_id>/replies")
@@ -353,8 +431,12 @@ def create_app(books_dir: Path | None = None) -> Flask:
         author = (body.get("author") or "Reader").strip()[:40] or "Reader"
         if not text:
             return jsonify({"error": "Reply text is required"}), 400
+        if PHI_PATTERN.search(text) and not body.get("confirm_phi"):
+            return jsonify({
+                "error": "Possible patient identifier detected in reply. Remove PHI before saving."
+            }), 422
 
-        with notes_lock:
+        with get_book_lock(book_id):
             notes = _load_json(notes_path, [])
             target_note = next((n for n in notes if n.get("id") == note_id), None)
             if not target_note:
@@ -368,6 +450,7 @@ def create_app(books_dir: Path | None = None) -> Flask:
             }
             target_note.setdefault("replies", []).append(reply)
             _save_json(notes_path, notes)
+        _write_audit_log(audit_log_path, "add_reply", book_id, actor=author, note_id=note_id)
         return jsonify({"reply": reply, "notes": notes}), 201
 
     @app.get("/api/books/<raw_id>/session")
@@ -379,17 +462,19 @@ def create_app(books_dir: Path | None = None) -> Flask:
         if not book_dir.exists():
             return jsonify({"error": "Book not found"}), 404
 
+        room_id = _safe_book_id((request.args.get("room") or "public").strip()) or "public"
         now_ts = datetime.now(timezone.utc).timestamp()
-        readers = co_reading_sessions.get(book_id, {})
-        # Prune stale readers (> 90s inactive)
-        active = {
-            name: info
-            for name, info in readers.items()
-            if now_ts - info.get("ts", 0) <= 90
-        }
-        co_reading_sessions[book_id] = active
-        notes = _load_json(book_dir / "notes.json", [])
-        return jsonify({"readers": active, "notes": notes})
+        with sessions_lock:
+            readers = co_reading_sessions.get((book_id, room_id), {})
+            active = {
+                name: info
+                for name, info in readers.items()
+                if now_ts - info.get("ts", 0) <= 90
+            }
+            co_reading_sessions[(book_id, room_id)] = active
+        with get_book_lock(book_id):
+            notes = _load_json(book_dir / "notes.json", [])
+        return jsonify({"readers": active, "notes": notes, "room": room_id})
 
     @app.post("/api/books/<raw_id>/session")
     def update_session(raw_id: str):
@@ -401,15 +486,19 @@ def create_app(books_dir: Path | None = None) -> Flask:
             return jsonify({"error": "Book not found"}), 404
 
         body = request.get_json(silent=True) or {}
+        room_id = _safe_book_id((body.get("room") or "public").strip()) or "public"
         reader = (body.get("reader") or "Reader").strip()[:32] or "Reader"
         page = max(1, int(body.get("page") or 1))
         now = datetime.now(timezone.utc)
-        co_reading_sessions.setdefault(book_id, {})[reader] = {
-            "page": page,
-            "updated_at": now.isoformat(),
-            "ts": now.timestamp(),
-        }
-        return jsonify({"ok": True, "readers": co_reading_sessions[book_id]})
+        with sessions_lock:
+            bucket = co_reading_sessions.setdefault((book_id, room_id), {})
+            bucket[reader] = {
+                "page": page,
+                "updated_at": now.isoformat(),
+                "ts": now.timestamp(),
+            }
+            snapshot = dict(bucket)
+        return jsonify({"ok": True, "readers": snapshot, "room": room_id})
 
     @app.post("/api/books/<raw_id>/ask-ai")
     def ask_ai_coreader(raw_id: str):
@@ -449,7 +538,7 @@ def create_app(books_dir: Path | None = None) -> Flask:
                 summary = f"Co-Reader Summary ({prompt}): {excerpt}"
 
         notes_path = book_dir / "notes.json"
-        with notes_lock:
+        with get_book_lock(book_id):
             notes = _load_json(notes_path, [])
             existing_on_page = [n for n in notes if n.get("page") == page and n.get("x") is not None]
             pin_y = min(85.0, 24.0 + len(existing_on_page) * 14.0)
@@ -467,6 +556,7 @@ def create_app(books_dir: Path | None = None) -> Flask:
             }
             notes.append(note)
             _save_json(notes_path, notes)
+        _write_audit_log(audit_log_path, "ask_ai", book_id, page=page)
         return jsonify({"note": note, "notes": notes}), 201
 
     @app.delete("/api/books/<raw_id>/notes/<note_id>")
@@ -479,10 +569,11 @@ def create_app(books_dir: Path | None = None) -> Flask:
         if not notes_path.exists():
             return jsonify({"error": "Notes not found"}), 404
 
-        with notes_lock:
+        with get_book_lock(book_id):
             notes = _load_json(notes_path, [])
             updated = [n for n in notes if n.get("id") != note_id]
             _save_json(notes_path, updated)
+        _write_audit_log(audit_log_path, "delete_note", book_id, note_id=note_id)
         return jsonify({"notes": updated})
 
     @app.get("/api/books/<raw_id>/export-annotated-pdf")

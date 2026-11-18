@@ -142,3 +142,27 @@ def test_image_batch_upload_and_notes(client):
     del_res = client.delete(f"/api/books/{book['id']}/notes/{note_id}")
     assert del_res.status_code == 200
     assert del_res.get_json()["notes"] == []
+
+
+def test_enterprise_security_and_room_isolation(client):
+    # Security headers present on HTML response
+    home = client.get("/")
+    assert home.status_code == 200
+    assert home.headers.get("X-Content-Type-Options") == "nosniff"
+    assert home.headers.get("Referrer-Policy") == "no-referrer"
+    assert "Content-Security-Policy" in home.headers
+
+    # Thai 13-digit ID PHI blocked on note creation
+    phi_note = client.post(
+        "/api/books/demo-wellness-guide/notes",
+        json={"page": 1, "author": "Nurse", "text": "Patient ID 1-1004-00123-45-6"},
+    )
+    assert phi_note.status_code == 422
+
+    # Co-reading rooms are isolated
+    client.post("/api/books/demo-wellness-guide/session", json={"reader": "PatientA", "page": 1, "room": "room-a"})
+    client.post("/api/books/demo-wellness-guide/session", json={"reader": "PatientB", "page": 3, "room": "room-b"})
+    room_a = client.get("/api/books/demo-wellness-guide/session?room=room-a").get_json()["readers"]
+    room_b = client.get("/api/books/demo-wellness-guide/session?room=room-b").get_json()["readers"]
+    assert "PatientA" in room_a and "PatientB" not in room_a
+    assert "PatientB" in room_b and "PatientA" not in room_b

@@ -6,7 +6,7 @@
     books: [],
     currentPage: 1,
     isFlipping: false,
-    soundEnabled: true,
+    soundEnabled: false,
     zoom: 1,
     panX: 0,
     panY: 0,
@@ -26,6 +26,21 @@
   };
 
   const el = (id) => document.getElementById(id);
+
+  let toastTimer = null;
+  function showToast(msg, isError = false) {
+    const box = el("app-toast");
+    if (!box) return;
+    box.textContent = msg;
+    box.classList.toggle("is-error", Boolean(isError));
+    box.classList.remove("hidden");
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => box.classList.add("hidden"), 4500);
+  }
+
+  function prefersReducedMotion() {
+    return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
 
   function isSingleMode() {
     return window.innerWidth < 820;
@@ -189,6 +204,7 @@
       pin.style.left = `${note.x}%`;
       pin.style.top = `${note.y}%`;
       pin.title = `${note.author || "Reader"}: ${note.text}`;
+      pin.setAttribute("aria-label", `Pin ${idx + 1} by ${note.author || "Reader"} on page ${note.page}`);
       pin.innerHTML = `<span>${idx + 1}</span>`;
       pin.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -972,6 +988,9 @@
     const list = el("notes-list");
     const badge = el("notes-badge");
     const select = el("note-page-select");
+    if (document.activeElement && list.contains(document.activeElement) && document.activeElement.tagName === "INPUT") {
+      return;
+    }
     list.innerHTML = "";
 
     if (!state.book) return;
@@ -1007,6 +1026,9 @@
       const isHermes = author.toLowerCase().startsWith("hermes") || author.toLowerCase().includes("ai");
       const card = document.createElement("div");
       card.className = "note-card" + (isHermes ? " hermes" : "");
+      card.setAttribute("role", "button");
+      card.setAttribute("tabindex", "0");
+      card.setAttribute("aria-label", `Note ${idx + 1} by ${author} on page ${note.page}`);
       card.innerHTML = `
         <div class="note-card-head">
           <span><span class="note-author-tag"></span>#${idx + 1} • Page ${note.page}${note.x != null ? " (Pinned)" : ""}</span>
@@ -1041,13 +1063,27 @@
         if (e.target.closest(".note-delete") || e.target.closest(".note-reply-form")) return;
         jumpToPage(note.page);
       });
+      card.addEventListener("keydown", (e) => {
+        if (e.target.tagName === "INPUT" || e.target.tagName === "BUTTON") return;
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          jumpToPage(note.page);
+        }
+      });
 
       card.querySelector(".note-delete").addEventListener("click", async () => {
-        const res = await fetch(`/api/books/${state.book.id}/notes/${note.id}`, { method: "DELETE" });
-        if (res.ok) {
-          const data = await res.json();
-          state.book.notes = data.notes;
-          renderNotes();
+        try {
+          const res = await fetch(`/api/books/${state.book.id}/notes/${note.id}`, { method: "DELETE" });
+          if (res.ok) {
+            const data = await res.json();
+            state.book.notes = data.notes;
+            renderNotes();
+          } else {
+            const err = await res.json().catch(() => ({}));
+            showToast(err.error || "Failed to delete note", true);
+          }
+        } catch {
+          showToast("Network error deleting note", true);
         }
       });
 
@@ -1056,15 +1092,22 @@
         const input = e.target.querySelector("input");
         const replyText = input.value.trim();
         if (!replyText) return;
-        const res = await fetch(`/api/books/${state.book.id}/notes/${note.id}/replies`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ author: state.readerName, text: replyText }),
-        });
-        if (res.ok) {
-          const data = await res.json();
-          state.book.notes = data.notes;
-          renderNotes();
+        try {
+          const res = await fetch(`/api/books/${state.book.id}/notes/${note.id}/replies`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ author: state.readerName, text: replyText }),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            state.book.notes = data.notes;
+            renderNotes();
+          } else {
+            const err = await res.json().catch(() => ({}));
+            showToast(err.error || "Failed to save reply", true);
+          }
+        } catch {
+          showToast("Network error saving reply", true);
         }
       });
 
@@ -1367,7 +1410,12 @@
           const data = await res.json();
           state.book.notes = data.notes;
           renderNotes();
+        } else {
+          const err = await res.json().catch(() => ({}));
+          showToast(err.error || "AI summary could not be generated", true);
         }
+      } catch {
+        showToast("Network error contacting AI Co-Reader", true);
       } finally {
         chips.forEach((c) => (c.disabled = false));
       }
@@ -1438,18 +1486,25 @@
         x: state.pendingPin && state.pendingPin.page === page ? state.pendingPin.x : null,
         y: state.pendingPin && state.pendingPin.page === page ? state.pendingPin.y : null,
       };
-      const res = await fetch(`/api/books/${state.book.id}/notes`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        state.book.notes = data.notes;
-        state.pendingPin = null;
-        el("pin-coords-hint").classList.add("hidden");
-        el("note-text").value = "";
-        renderNotes();
+      try {
+        const res = await fetch(`/api/books/${state.book.id}/notes`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          state.book.notes = data.notes;
+          state.pendingPin = null;
+          el("pin-coords-hint").classList.add("hidden");
+          el("note-text").value = "";
+          renderNotes();
+        } else {
+          const err = await res.json().catch(() => ({}));
+          showToast(err.error || "Failed to save note", true);
+        }
+      } catch {
+        showToast("Network error saving note", true);
       }
     });
 
@@ -1486,6 +1541,39 @@
       state.isDragging = false;
       panLayer.classList.remove("is-dragging");
     });
+
+    // Touch pan when zoomed + 2-finger pinch-to-zoom for mobile/tablets
+    let pinchStartDist = 0;
+    let pinchStartZoom = 1;
+    panLayer.addEventListener("touchstart", (e) => {
+      if (e.touches.length === 2) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        pinchStartDist = Math.hypot(dx, dy);
+        pinchStartZoom = state.zoom;
+      } else if (e.touches.length === 1 && state.zoom > 1) {
+        state.isDragging = true;
+        state.dragStartX = e.touches[0].clientX - state.panX;
+        state.dragStartY = e.touches[0].clientY - state.panY;
+      }
+    }, { passive: true });
+    panLayer.addEventListener("touchmove", (e) => {
+      if (e.touches.length === 2 && pinchStartDist > 0) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const scale = Math.hypot(dx, dy) / pinchStartDist;
+        state.zoom = Math.max(1, Math.min(2.6, Number((pinchStartZoom * scale).toFixed(2))));
+        panLayer.style.transform = `translate(${state.panX}px, ${state.panY}px) scale(${state.zoom})`;
+      } else if (e.touches.length === 1 && state.isDragging && state.zoom > 1) {
+        state.panX = e.touches[0].clientX - state.dragStartX;
+        state.panY = e.touches[0].clientY - state.dragStartY;
+        panLayer.style.transform = `translate(${state.panX}px, ${state.panY}px) scale(${state.zoom})`;
+      }
+    }, { passive: true });
+    panLayer.addEventListener("touchend", () => {
+      state.isDragging = false;
+      pinchStartDist = 0;
+    }, { passive: true });
 
     el("btn-fullscreen").addEventListener("click", () => {
       if (!document.fullscreenElement) {
@@ -1531,10 +1619,11 @@
     const dropzone = el("dropzone");
     const fileInput = el("upload-file-input");
     fileInput.addEventListener("change", () => {
+      const lbl = el("dropzone-label");
       if (fileInput.files.length === 1) {
-        el("dropzone-label").innerHTML = `Selected: <strong>${fileInput.files[0].name}</strong>`;
+        lbl.textContent = `Selected: ${fileInput.files[0].name}`;
       } else if (fileInput.files.length > 1) {
-        el("dropzone-label").innerHTML = `Selected: <strong>${fileInput.files.length} image files</strong>`;
+        lbl.textContent = `Selected: ${fileInput.files.length} image files`;
       }
     });
     dropzone.addEventListener("dragover", (e) => {
