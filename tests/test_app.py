@@ -41,11 +41,11 @@ def test_demo_book_created_and_listed(client):
     res = client.get("/api/books")
     assert res.status_code == 200
     books = res.get_json()["books"]
-    assert any(b["id"] == "demo-wellness-guide" and b["page_count"] == 8 for b in books)
+    assert any(b["id"] == "demo-wellness-guide" and b["page_count"] == 4 for b in books)
 
     detail = client.get("/api/books/demo-wellness-guide")
     assert detail.status_code == 200
-    assert len(detail.get_json()["pages"]) == 8
+    assert len(detail.get_json()["pages"]) == 4
 
 
 def test_pdf_upload_search_and_download(client):

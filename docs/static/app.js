@@ -595,12 +595,12 @@
     const backPageNum = direction === "next"
       ? (nextSpread.left || nextSpread.right)
       : (nextSpread.right || nextSpread.left);
-    const underPageNum = direction === "next"
-      ? nextSpread.right
-      : nextSpread.left;
-    const staticPageNum = direction === "next"
-      ? prevSpread.left
-      : prevSpread.right;
+    const underPageNum = isSingle
+      ? (nextSpread.right || nextSpread.left)
+      : (direction === "next" ? nextSpread.right : nextSpread.left);
+    const staticPageNum = isSingle
+      ? null
+      : (direction === "next" ? prevSpread.left : prevSpread.right);
 
     return {
       direction,
@@ -755,6 +755,7 @@
       });
 
       zone.addEventListener("pointerdown", (e) => {
+        if (isSingleMode()) return; // Mobile single-page mode uses full-page touch handler below
         if (state.pinMode || state.zoom > 1 || state.isFlipping || !state.book) return;
         const total = state.book.page_count;
         if (direction === "next" && state.currentPage >= total) return;
@@ -844,6 +845,108 @@
 
     attachDrag(rightZone, "next");
     attachDrag(leftZone, "prev");
+
+    // Mobile Single-Page Mode: Full-Page Swipe & Left/Right Edge Tap
+    const bookContainer = el("book-container");
+    bookContainer.addEventListener("pointerdown", (e) => {
+      if (!isSingleMode() || state.pinMode || state.zoom > 1 || state.isFlipping || !state.book) return;
+      if (e.target.closest(".page-pin")) return;
+
+      const total = state.book.page_count;
+      const startX = e.clientX;
+      const startY = e.clientY;
+      const rect = bookContainer.getBoundingClientRect();
+      const cornerV = (startY - rect.top) < rect.height * 0.35 ? "top" : "bottom";
+
+      let direction = null;
+      let cfg = null;
+      let ctx = null;
+      let lastPt = null;
+
+      try {
+        if (e.pointerId != null) bookContainer.setPointerCapture(e.pointerId);
+      } catch {}
+
+      preloadNearbyImages();
+
+      const onMove = (ev) => {
+        const dx = ev.clientX - startX;
+        const dy = ev.clientY - startY;
+        if (!direction) {
+          if (Math.hypot(dx, dy) < 8) return;
+          direction = dx < 0 ? "next" : "prev";
+          if (direction === "next" && state.currentPage >= total) {
+            direction = "blocked";
+            return;
+          }
+          if (direction === "prev" && state.currentPage <= 1) {
+            direction = "blocked";
+            return;
+          }
+          const targetPage = direction === "next"
+            ? Math.min(total, state.currentPage + 1)
+            : Math.max(1, state.currentPage - 1);
+          cfg = prepareFoldConfig(direction, targetPage, cornerV);
+          ctx = setupRetinaCanvas(canvas, cfg.totalW, cfg.totalH).ctx;
+          coverFrame.classList.add("is-folding");
+          canvas.classList.remove("hidden");
+        }
+        if (direction === "blocked" || !cfg) return;
+
+        // Map horizontal swipe distance across full page width
+        const swipeSpan = Math.max(120, cfg.pageW);
+        const prog = direction === "next"
+          ? Math.max(0.04, Math.min(0.95, -dx / swipeSpan))
+          : Math.max(0.04, Math.min(0.95, dx / swipeSpan));
+        const synthX = direction === "next"
+          ? cfg.totalW - prog * (cfg.totalW * 1.45)
+          : prog * (cfg.totalW * 1.45);
+        const localY = Math.max(12, Math.min(cfg.totalH - 12, ev.clientY - rect.top));
+        lastPt = constrainFoldPoint(synthX, localY, cfg.spineX, cfg.cy, cfg.pageW, cfg.totalH);
+        drawPaperFoldFrame(ctx, { ...cfg, px: lastPt.x, py: lastPt.y });
+      };
+
+      const onUp = (ev) => {
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+        window.removeEventListener("pointercancel", onUp);
+        try {
+          if (ev.pointerId != null && bookContainer.hasPointerCapture(ev.pointerId)) {
+            bookContainer.releasePointerCapture(ev.pointerId);
+          }
+        } catch {}
+
+        if (!direction) {
+          // Simple tap on left 35% -> prev, right 65% -> next
+          const tapRelX = (ev.clientX - rect.left) / Math.max(1, rect.width);
+          if (tapRelX < 0.35) goPrev();
+          else goNext();
+          return;
+        }
+
+        if (direction === "blocked" || !cfg) {
+          coverFrame.classList.remove("is-folding");
+          canvas.classList.add("hidden");
+          return;
+        }
+
+        const dx = ev.clientX - startX;
+        const threshold = Math.min(55, cfg.pageW * 0.16);
+        const shouldComplete = direction === "next" ? -dx > threshold : dx > threshold;
+
+        if (shouldComplete) {
+          animateFlip(direction, cfg.targetPage, lastPt, cornerV);
+        } else {
+          coverFrame.classList.remove("is-folding");
+          canvas.classList.add("hidden");
+          renderBookSpread();
+        }
+      };
+
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp);
+      window.addEventListener("pointercancel", onUp);
+    });
   }
 
   function renderThumbnails() {
