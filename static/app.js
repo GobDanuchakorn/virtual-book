@@ -257,7 +257,6 @@
     spine.classList.toggle("hidden", !(spread.left && spread.right));
     updatePaperStacks(spread, total);
     renderPagePins(spread);
-    syncPageVideoOverlays(spread);
 
     el("page-input").value = String(state.currentPage);
     el("page-total").textContent = `/ ${total}`;
@@ -279,53 +278,6 @@
 
     updateHash();
     pushSessionHeartbeat();
-  }
-
-  function positionVideoOverlay(slot, vid, imgEl) {
-    if (!slot || !vid || !imgEl) return;
-    const w = imgEl.offsetWidth;
-    const h = imgEl.offsetHeight;
-    if (!w || !h) return;
-    vid.style.left = `${imgEl.offsetLeft + w * 0.0643}px`;
-    vid.style.top = `${imgEl.offsetTop + h * 0.2301}px`;
-    vid.style.width = `${w * 0.8554}px`;
-    vid.style.height = `${h * 0.2067}px`;
-  }
-
-  function syncPageVideoOverlays(spread) {
-    const slots = [
-      { slotId: "page-left-slot", imgId: "img-left", pageNum: isSingleMode() ? null : spread.left },
-      { slotId: "page-right-slot", imgId: "img-right", pageNum: isSingleMode() ? (spread.right || spread.left || 1) : spread.right },
-    ];
-    const isDemoBook = state.book && state.book.id === "demo-wellness-guide";
-    slots.forEach(({ slotId, imgId, pageNum }) => {
-      const slot = el(slotId);
-      const imgEl = el(imgId);
-      if (!slot || !imgEl) return;
-      let vid = slot.querySelector(".page-video-overlay");
-      if (isDemoBook && pageNum === 3) {
-        if (!vid) {
-          vid = document.createElement("video");
-          vid.className = "page-video-overlay";
-          vid.src = "./static/videos/page3_demo.mp4?v=14";
-          vid.autoplay = true;
-          vid.loop = true;
-          vid.muted = true;
-          vid.playsInline = true;
-          vid.setAttribute("playsinline", "");
-          vid.setAttribute("muted", "");
-          slot.appendChild(vid);
-          imgEl.addEventListener("load", () => positionVideoOverlay(slot, vid, imgEl));
-        }
-        vid.classList.remove("hidden");
-        positionVideoOverlay(slot, vid, imgEl);
-        requestAnimationFrame(() => positionVideoOverlay(slot, vid, imgEl));
-        vid.play().catch(() => {});
-      } else if (vid) {
-        vid.pause();
-        vid.classList.add("hidden");
-      }
-    });
   }
 
   const imgCache = new Map();

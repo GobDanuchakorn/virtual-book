@@ -511,19 +511,6 @@ html, body {
   max-width: 82vw;
 }
 
-.page-video-overlay {
-  position: absolute;
-  border-radius: 14px;
-  object-fit: cover;
-  pointer-events: none;
-  z-index: 3;
-  box-shadow: 0 8px 20px rgba(72, 41, 117, 0.12);
-}
-
-.page-video-overlay.hidden {
-  display: none;
-}
-
 /* Realistic spine & page curvature shadows */
 .page-shadow-left {
   position: absolute;
