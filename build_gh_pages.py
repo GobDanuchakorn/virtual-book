@@ -44,7 +44,7 @@ def build_static_site() -> None:
     html = html.replace('href="/static/style.css"', 'href="./static/style.css"')
     html = html.replace(
         '<script src="/static/app.js"></script>',
-        '<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>\n  <script src="./static/static-shim.js"></script>\n  <script src="./static/app.js"></script>',
+        '<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>\n  <script src="./static/static-shim.js?v=7"></script>\n  <script src="./static/app.js?v=7"></script>',
     )
     (DOCS_DIR / "index.html").write_text(html, encoding="utf-8")
 
@@ -71,13 +71,14 @@ def build_static_site() -> None:
     ]);
     const savedNotes = localStorage.getItem("vb_notes_demo-wellness-guide");
     const notes = savedNotes ? JSON.parse(savedNotes) : seedNotes;
+    const v = encodeURIComponent(meta.edition || "1");
     const pages = [];
     for (let i = 1; i <= meta.page_count; i++) {
       const num = String(i).padStart(3, "0");
       pages.push({
         page: i,
-        image_url: `./books/demo-wellness-guide/pages/page_${num}.webp`,
-        thumb_url: `./books/demo-wellness-guide/thumbs/thumb_${num}.webp`,
+        image_url: `./books/demo-wellness-guide/pages/page_${num}.webp?v=${v}`,
+        thumb_url: `./books/demo-wellness-guide/thumbs/thumb_${num}.webp?v=${v}`,
       });
     }
     memBooks.set("demo-wellness-guide", {

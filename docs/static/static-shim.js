@@ -18,13 +18,14 @@
     ]);
     const savedNotes = localStorage.getItem("vb_notes_demo-wellness-guide");
     const notes = savedNotes ? JSON.parse(savedNotes) : seedNotes;
+    const v = encodeURIComponent(meta.edition || "1");
     const pages = [];
     for (let i = 1; i <= meta.page_count; i++) {
       const num = String(i).padStart(3, "0");
       pages.push({
         page: i,
-        image_url: `./books/demo-wellness-guide/pages/page_${num}.webp`,
-        thumb_url: `./books/demo-wellness-guide/thumbs/thumb_${num}.webp`,
+        image_url: `./books/demo-wellness-guide/pages/page_${num}.webp?v=${v}`,
+        thumb_url: `./books/demo-wellness-guide/thumbs/thumb_${num}.webp?v=${v}`,
       });
     }
     memBooks.set("demo-wellness-guide", {
