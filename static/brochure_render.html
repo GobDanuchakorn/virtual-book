@@ -286,21 +286,21 @@
 
     <!-- Bottom 3 Clean Highlights -->
     <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; z-index:5;">
-      <div class="card-clean" style="padding:16px 18px; display:flex; align-items:center; gap:14px;">
+      <div id="p1-card-0" class="card-clean" style="padding:16px 18px; display:flex; align-items:center; gap:14px;">
         <div style="width:50px;height:50px;border-radius:14px;background:#fce7f3;color:#e24e91;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;flex-shrink:0;">01</div>
         <div>
           <div style="font-size:20px;font-weight:600;color:#3a245e;">ฉีดยาชาเฉพาะที่</div>
           <div style="font-size:15.5px;font-weight:400;color:#5e497a;">รู้สึกเพียงแรงกดเบาๆ ไม่ปวด</div>
         </div>
       </div>
-      <div class="card-clean" style="padding:16px 18px; display:flex; align-items:center; gap:14px;">
+      <div id="p1-card-1" class="card-clean" style="padding:16px 18px; display:flex; align-items:center; gap:14px;">
         <div style="width:50px;height:50px;border-radius:14px;background:#ede9fe;color:#614193;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;flex-shrink:0;">02</div>
         <div>
           <div style="font-size:20px;font-weight:600;color:#3a245e;">ไม่ต้องงดน้ำ-อาหาร</div>
           <div style="font-size:15.5px;font-weight:400;color:#5e497a;">ทานอาหารก่อนมาตรวจได้ปกติ</div>
         </div>
       </div>
-      <div class="card-clean" style="padding:16px 18px; display:flex; align-items:center; gap:14px;">
+      <div id="p1-card-2" class="card-clean" style="padding:16px 18px; display:flex; align-items:center; gap:14px;">
         <div style="width:50px;height:50px;border-radius:14px;background:#e0e7ff;color:#4c6ef5;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;flex-shrink:0;">03</div>
         <div>
           <div style="font-size:20px;font-weight:600;color:#3a245e;">ดูแลโดยแพทย์เฉพาะทาง</div>
@@ -349,6 +349,10 @@
             <line x1="278" y1="138" x2="165" y2="178" stroke="#ffffff" stroke-width="6" stroke-linecap="round" opacity="0.7" />
             <line x1="278" y1="138" x2="165" y2="178" stroke="#614193" stroke-width="3.2" stroke-linecap="round" />
             <circle cx="165" cy="178" r="3.5" fill="#e24e91" />
+          </g>
+          <g id="p2-click-badge" opacity="0">
+            <rect x="192" y="102" width="66" height="26" rx="13" fill="#e24e91" stroke="#ffffff" stroke-width="2" />
+            <text x="225" y="120" text-anchor="middle" font-family="Kanit" font-size="14" font-weight="700" fill="#ffffff">คลิก!</text>
           </g>
         </svg>
       </div>
@@ -438,15 +442,17 @@
     <div class="illu-frame" style="position:relative; height:310px; border-radius:24px;">
       <img src="illustrations/procedure_scene.jpg" alt="Doctor performing ultrasound-guided breast checkup" style="object-position: center 35%;" />
       <svg viewBox="0 0 940 310" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none;">
-        <!-- Subtle ultrasound scan beam over monitor & probe -->
+        <!-- Live ultrasound monitor scan beam & probe pulse -->
         <ellipse id="p3-scan-glow" cx="732" cy="108" rx="46" ry="28" fill="#e24e91" opacity="0.18" />
+        <line id="p3-scan-line" x1="696" y1="90" x2="768" y2="90" stroke="#ffffff" stroke-width="2.5" opacity="0.75" />
         <circle id="p3-probe-pulse" cx="426" cy="148" r="14" fill="none" stroke="#e24e91" stroke-width="3" opacity="0.7" />
+        <circle id="p3-probe-pulse-2" cx="426" cy="148" r="22" fill="none" stroke="#614193" stroke-width="2" opacity="0.5" />
       </svg>
     </div>
 
-    <!-- Clean 2x2 White Cards (NO ugly left border bars) -->
+    <!-- Clean 2x2 White Cards (sequential active highlight) -->
     <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:18px; z-index:5;">
-      <div class="card-clean" style="padding:20px 24px;">
+      <div id="p3-step-0" class="card-clean" style="padding:20px 24px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
           <span class="step-badge" style="background:#614193;">STEP 01</span>
           <span style="font-size:15.5px; font-weight:500; color:#614193;">5–10 นาที</span>
@@ -457,7 +463,7 @@
         </div>
       </div>
 
-      <div class="card-clean" style="padding:20px 24px;">
+      <div id="p3-step-1" class="card-clean" style="padding:20px 24px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
           <span class="step-badge">STEP 02</span>
           <span style="font-size:15.5px; font-weight:500; color:#d83b80;">3–5 นาที</span>
@@ -468,7 +474,7 @@
         </div>
       </div>
 
-      <div class="card-clean" style="padding:20px 24px;">
+      <div id="p3-step-2" class="card-clean" style="padding:20px 24px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
           <span class="step-badge">STEP 03</span>
           <span style="font-size:15.5px; font-weight:500; color:#d83b80;">10–15 นาที</span>
@@ -479,7 +485,7 @@
         </div>
       </div>
 
-      <div class="card-clean" style="padding:20px 24px;">
+      <div id="p3-step-3" class="card-clean" style="padding:20px 24px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
           <span class="step-badge" style="background:#614193;">STEP 04</span>
           <span style="font-size:15.5px; font-weight:500; color:#614193;">10–15 นาที</span>
@@ -538,17 +544,17 @@
           <span>การดูแลตนเองหลังเจาะชิ้นเนื้อ</span>
           <span style="font-size:15px; font-weight:400; background:rgba(255,255,255,0.22); padding:3px 12px; border-radius:999px;">48 ชม. แรก</span>
         </div>
-        <div style="padding:18px 22px; display:flex; flex-direction:column; justify-content:space-between; flex:1; gap:12px;">
-          <div style="font-size:19px; font-weight:400; color:#2b2140; line-height:1.45;">
+        <div style="padding:18px 22px; display:flex; flex-direction:column; justify-content:space-between; flex:1; gap:10px;">
+          <div id="p4-row-0" style="padding:6px 10px; border-radius:12px; font-size:19px; font-weight:400; color:#2b2140; line-height:1.42;">
             <span style="color:#e24e91; font-weight:700;">•</span> <b style="font-weight:600; color:#3a245e;">ประคบเย็น 24 ชั่วโมงแรก:</b> ใช้เจลเย็นห่อผ้าสะอาดประคบทับครั้งละ 15 นาที ทุก 2–3 ชม. เพื่อลดบวมและรอยช้ำ
           </div>
-          <div style="font-size:19px; font-weight:400; color:#2b2140; line-height:1.45;">
+          <div id="p4-row-1" style="padding:6px 10px; border-radius:12px; font-size:19px; font-weight:400; color:#2b2140; line-height:1.42;">
             <span style="color:#e24e91; font-weight:700;">•</span> <b style="font-weight:600; color:#3a245e;">ระวังแผลโดนน้ำ 24–48 ชม.:</b> อาบน้ำได้หากพลาสเตอร์กันน้ำปิดสนิท งดแช่น้ำหรือว่ายน้ำ 7 วัน
           </div>
-          <div style="font-size:19px; font-weight:400; color:#2b2140; line-height:1.45;">
+          <div id="p4-row-2" style="padding:6px 10px; border-radius:12px; font-size:19px; font-weight:400; color:#2b2140; line-height:1.42;">
             <span style="color:#e24e91; font-weight:700;">•</span> <b style="font-weight:600; color:#3a245e;">ทานพาราเซตามอล:</b> หากปวดตึงทาน Paracetamol <span style="color:#d83b80; font-weight:500;">งด Aspirin / Ibuprofen 48 ชม.</span>
           </div>
-          <div style="font-size:19px; font-weight:400; color:#2b2140; line-height:1.45;">
+          <div id="p4-row-3" style="padding:6px 10px; border-radius:12px; font-size:19px; font-weight:400; color:#2b2140; line-height:1.42;">
             <span style="color:#e24e91; font-weight:700;">•</span> <b style="font-weight:600; color:#3a245e;">สวม Sports Bra 2–3 วันแรก:</b> ช่วยพยุงเต้านมลดการขยับ และงดยกของหนักหรือออกกำลังกายหนัก
           </div>
         </div>
@@ -603,55 +609,107 @@
   function applyPhase(t) {
     // t in [0, 1)
     const s = 0.5 * (1 - Math.cos(2 * Math.PI * t)); // smooth 0 -> 1 -> 0
-    const wave1 = (t) % 1;
+    const wave1 = t % 1;
     const wave2 = (t + 0.5) % 1;
 
-    // Page 1: ultrasound callout wave rings
+    // Page 1: gentle hero float + ultrasound callout wave rings + sequential bottom card highlight
+    const p1img = document.getElementById("p1-hero-img");
     const p1w1 = document.getElementById("p1-wave-1");
     const p1w2 = document.getElementById("p1-wave-2");
-    if (p1w1 && p1w2) {
-      p1w1.setAttribute("r", (10 + wave1 * 28).toFixed(1));
-      p1w1.setAttribute("opacity", (0.85 * (1 - wave1)).toFixed(2));
-      p1w2.setAttribute("r", (10 + wave2 * 28).toFixed(1));
-      p1w2.setAttribute("opacity", (0.85 * (1 - wave2)).toFixed(2));
+    if (p1img && p1w1 && p1w2) {
+      p1img.style.transform = `translateY(${(-3 * s).toFixed(1)}px) scale(${(1 + 0.012 * s).toFixed(4)})`;
+      p1w1.setAttribute("r", (10 + wave1 * 30).toFixed(1));
+      p1w1.setAttribute("opacity", (0.9 * (1 - wave1)).toFixed(2));
+      p1w2.setAttribute("r", (10 + wave2 * 30).toFixed(1));
+      p1w2.setAttribute("opacity", (0.9 * (1 - wave2)).toFixed(2));
+      const activeP1 = Math.floor(t * 3) % 3;
+      for (let i = 0; i < 3; i++) {
+        const c = document.getElementById(`p1-card-${i}`);
+        if (c) {
+          c.style.transform = i === activeP1 ? "translateY(-4px)" : "translateY(0px)";
+          c.style.borderColor = i === activeP1 ? "#e24e91" : "#efe3db";
+        }
+      }
     }
 
-    // Page 2: animated ultrasound waves + moving core biopsy needle
+    // Page 2: multi-stage ultrasound waves + moving core biopsy needle + "คลิก!" pulse
     const p2w1 = document.getElementById("p2-w1");
     const p2w2 = document.getElementById("p2-w2");
     const p2w3 = document.getElementById("p2-w3");
     const p2ring = document.getElementById("p2-nodule-ring");
     const p2needle = document.getElementById("p2-needle-group");
+    const p2click = document.getElementById("p2-click-badge");
     if (p2w1 && p2needle) {
-      p2w1.setAttribute("opacity", (0.25 + 0.75 * Math.abs(Math.sin(Math.PI * ((t * 2) % 1)))).toFixed(2));
-      p2w2.setAttribute("opacity", (0.25 + 0.75 * Math.abs(Math.sin(Math.PI * ((t * 2 + 0.33) % 1)))).toFixed(2));
-      p2w3.setAttribute("opacity", (0.25 + 0.75 * Math.abs(Math.sin(Math.PI * ((t * 2 + 0.66) % 1)))).toFixed(2));
-      // Needle glides gently toward nodule (-18px, +6.4px) and retracts
-      const dx = -18 * s;
-      const dy = 6.4 * s;
-      p2needle.setAttribute("transform", `translate(${dx.toFixed(2)}, ${dy.toFixed(2)})`);
-      p2ring.setAttribute("r", (16 + 7 * s).toFixed(1));
-      p2ring.setAttribute("opacity", (0.35 + 0.55 * s).toFixed(2));
+      p2w1.setAttribute("opacity", (0.2 + 0.8 * Math.abs(Math.sin(Math.PI * ((t * 2) % 1)))).toFixed(2));
+      p2w2.setAttribute("opacity", (0.2 + 0.8 * Math.abs(Math.sin(Math.PI * ((t * 2 + 0.33) % 1)))).toFixed(2));
+      p2w3.setAttribute("opacity", (0.2 + 0.8 * Math.abs(Math.sin(Math.PI * ((t * 2 + 0.66) % 1)))).toFixed(2));
+      // Stage: 0..0.35 scan, 0.35..0.65 needle advance & "คลิก!", 0.65..1.0 retract
+      let adv = 0;
+      let clickOp = 0;
+      if (t >= 0.25 && t < 0.55) {
+        adv = (t - 0.25) / 0.30;
+      } else if (t >= 0.55 && t < 0.72) {
+        adv = 1;
+        clickOp = 1 - Math.abs((t - 0.635) / 0.085);
+      } else if (t >= 0.72) {
+        adv = 1 - (t - 0.72) / 0.28;
+      }
+      const ease = 0.5 * (1 - Math.cos(Math.PI * adv));
+      p2needle.setAttribute("transform", `translate(${(-22 * ease).toFixed(2)}, ${(7.8 * ease).toFixed(2)})`);
+      p2ring.setAttribute("r", (15 + 9 * ease).toFixed(1));
+      p2ring.setAttribute("opacity", (0.35 + 0.65 * ease).toFixed(2));
+      if (p2click) {
+        p2click.setAttribute("opacity", Math.max(0, Math.min(1, clickOp)).toFixed(2));
+      }
     }
 
-    // Page 3: monitor glow + probe pulse
+    // Page 3: monitor scan line sweep + probe pulse + sequential STEP 01-04 walkthrough
     const p3glow = document.getElementById("p3-scan-glow");
+    const p3line = document.getElementById("p3-scan-line");
     const p3pulse = document.getElementById("p3-probe-pulse");
+    const p3pulse2 = document.getElementById("p3-probe-pulse-2");
     if (p3glow && p3pulse) {
-      p3glow.setAttribute("opacity", (0.10 + 0.24 * s).toFixed(2));
-      p3pulse.setAttribute("r", (8 + wave1 * 24).toFixed(1));
-      p3pulse.setAttribute("opacity", (0.85 * (1 - wave1)).toFixed(2));
+      p3glow.setAttribute("opacity", (0.08 + 0.26 * s).toFixed(2));
+      if (p3line) {
+        const y = 84 + 46 * s;
+        p3line.setAttribute("y1", y.toFixed(1));
+        p3line.setAttribute("y2", y.toFixed(1));
+      }
+      p3pulse.setAttribute("r", (8 + wave1 * 26).toFixed(1));
+      p3pulse.setAttribute("opacity", (0.9 * (1 - wave1)).toFixed(2));
+      if (p3pulse2) {
+        p3pulse2.setAttribute("r", (8 + wave2 * 26).toFixed(1));
+        p3pulse2.setAttribute("opacity", (0.85 * (1 - wave2)).toFixed(2));
+      }
+      const activeStep = Math.floor(t * 4) % 4;
+      for (let i = 0; i < 4; i++) {
+        const card = document.getElementById(`p3-step-${i}`);
+        if (card) {
+          card.style.transform = i === activeStep ? "translateY(-5px)" : "translateY(0px)";
+          card.style.borderColor = i === activeStep ? "#e24e91" : "#efe3db";
+          card.style.boxShadow = i === activeStep
+            ? "0 16px 30px -6px rgba(226, 78, 145, 0.24)"
+            : "0 10px 24px -8px rgba(72, 41, 117, 0.10)";
+        }
+      }
     }
 
-    // Page 4: aftercare icon rings
+    // Page 4: aftercare icon rings + sequential bullet row highlight
     const p4i1 = document.getElementById("p4-icon-1");
     const p4i2 = document.getElementById("p4-icon-2");
     if (p4i1 && p4i2) {
-      p4i1.setAttribute("r", (32 + 5 * s).toFixed(1));
-      p4i1.setAttribute("opacity", (0.35 + 0.55 * s).toFixed(2));
+      p4i1.setAttribute("r", (31 + 6 * s).toFixed(1));
+      p4i1.setAttribute("opacity", (0.35 + 0.6 * s).toFixed(2));
       const s2 = 0.5 * (1 - Math.cos(2 * Math.PI * ((t + 0.5) % 1)));
-      p4i2.setAttribute("r", (32 + 5 * s2).toFixed(1));
-      p4i2.setAttribute("opacity", (0.35 + 0.55 * s2).toFixed(2));
+      p4i2.setAttribute("r", (31 + 6 * s2).toFixed(1));
+      p4i2.setAttribute("opacity", (0.35 + 0.6 * s2).toFixed(2));
+      const activeRow = Math.floor(t * 4) % 4;
+      for (let i = 0; i < 4; i++) {
+        const row = document.getElementById(`p4-row-${i}`);
+        if (row) {
+          row.style.background = i === activeRow ? "#fdf2f8" : "transparent";
+        }
+      }
     }
   }
 
