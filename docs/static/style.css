@@ -513,11 +513,7 @@ html, body {
 
 .page-video-overlay {
   position: absolute;
-  left: 6.43%;
-  top: 17.6%;
-  width: 87.14%;
-  height: 20.67%;
-  border-radius: 16px;
+  border-radius: 14px;
   object-fit: cover;
   pointer-events: none;
   z-index: 3;
