@@ -18,10 +18,12 @@ def build_static_site() -> None:
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
     (DOCS_DIR / ".nojekyll").write_text("", encoding="utf-8")
 
-    # 1. Copy static CSS & JS
+    # 1. Copy static CSS, JS & videos
     static_dst = DOCS_DIR / "static"
     static_dst.mkdir(parents=True, exist_ok=True)
     shutil.copy2(BASE_DIR / "static" / "style.css", static_dst / "style.css")
+    if (BASE_DIR / "static" / "videos").exists():
+        shutil.copytree(BASE_DIR / "static" / "videos", static_dst / "videos", dirs_exist_ok=True)
 
     # 2. Copy demo book assets
     shutil.copytree(DEMO_SRC, DEMO_DST)
@@ -41,10 +43,10 @@ def build_static_site() -> None:
 
     # 4. Write index.html with relative asset paths (./static/...) + PDF.js CDN for client-side PDF uploads
     html = (BASE_DIR / "templates" / "index.html").read_text(encoding="utf-8")
-    html = html.replace('href="/static/style.css"', 'href="./static/style.css"')
+    html = html.replace('href="/static/style.css"', 'href="./static/style.css?v=11"')
     html = html.replace(
         '<script src="/static/app.js"></script>',
-        '<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>\n  <script src="./static/static-shim.js?v=7"></script>\n  <script src="./static/app.js?v=7"></script>',
+        '<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>\n  <script src="./static/static-shim.js?v=11"></script>\n  <script src="./static/app.js?v=11"></script>',
     )
     (DOCS_DIR / "index.html").write_text(html, encoding="utf-8")
 

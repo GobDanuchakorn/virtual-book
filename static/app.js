@@ -257,6 +257,7 @@
     spine.classList.toggle("hidden", !(spread.left && spread.right));
     updatePaperStacks(spread, total);
     renderPagePins(spread);
+    syncPageVideoOverlays(spread);
 
     el("page-input").value = String(state.currentPage);
     el("page-total").textContent = `/ ${total}`;
@@ -278,6 +279,38 @@
 
     updateHash();
     pushSessionHeartbeat();
+  }
+
+  function syncPageVideoOverlays(spread) {
+    const slots = [
+      { slotId: "page-left-slot", pageNum: isSingleMode() ? null : spread.left },
+      { slotId: "page-right-slot", pageNum: isSingleMode() ? (spread.right || spread.left || 1) : spread.right },
+    ];
+    const isDemoBook = state.book && state.book.id === "demo-wellness-guide";
+    slots.forEach(({ slotId, pageNum }) => {
+      const slot = el(slotId);
+      if (!slot) return;
+      let vid = slot.querySelector(".page-video-overlay");
+      if (isDemoBook && pageNum === 3) {
+        if (!vid) {
+          vid = document.createElement("video");
+          vid.className = "page-video-overlay";
+          vid.src = "./static/videos/page3_demo.mp4?v=11";
+          vid.autoplay = true;
+          vid.loop = true;
+          vid.muted = true;
+          vid.playsInline = true;
+          vid.setAttribute("playsinline", "");
+          vid.setAttribute("muted", "");
+          slot.appendChild(vid);
+        }
+        vid.classList.remove("hidden");
+        vid.play().catch(() => {});
+      } else if (vid) {
+        vid.pause();
+        vid.classList.add("hidden");
+      }
+    });
   }
 
   const imgCache = new Map();
