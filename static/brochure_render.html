@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8" />
-<title>Brochure Page Renderer</title>
+<title>Brochure Page Renderer — Thai Breast Biopsy Guide</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -13,132 +13,221 @@
     height: 100vh;
     overflow: hidden;
     font-family: 'Kanit', sans-serif;
-    background: #fff8fb;
-    color: #4a152e;
+    background: #87a2dc;
+    color: #2d1b4e;
     -webkit-font-smoothing: antialiased;
   }
+
   .page {
     position: relative;
     width: 100vw;
     height: 100vh;
-    padding: 58px 64px;
+    padding: 36px 40px 32px;
     display: none;
     flex-direction: column;
     justify-content: space-between;
     background:
-      radial-gradient(circle at 12% 14%, rgba(251, 207, 232, 0.55) 0%, transparent 42%),
-      radial-gradient(circle at 88% 82%, rgba(244, 114, 182, 0.22) 0%, transparent 48%),
-      linear-gradient(165deg, #fffcfd 0%, #fdf2f7 52%, #fce8f1 100%);
+      radial-gradient(circle at 15% 12%, rgba(255, 255, 255, 0.25) 0%, transparent 40%),
+      radial-gradient(circle at 85% 88%, rgba(91, 58, 140, 0.22) 0%, transparent 45%),
+      linear-gradient(170deg, #98b1e6 0%, #86a0db 52%, #7690cf 100%);
   }
   .page.active { display: flex; }
 
-  /* Double Rose-Gold Luxury Frame */
-  .frame-outer {
-    position: absolute;
-    inset: 28px;
-    border: 2.5px solid #c88d74;
-    border-radius: 24px;
-    pointer-events: none;
-    z-index: 20;
-    box-shadow: inset 0 0 0 8px rgba(255, 255, 255, 0.45);
-  }
-  .frame-inner {
-    position: absolute;
-    inset: 38px;
-    border: 1px solid rgba(200, 141, 116, 0.48);
-    border-radius: 16px;
-    pointer-events: none;
-    z-index: 20;
-  }
-
-  /* Header Bar */
-  .top-bar {
+  /* Warm Cream Editorial Sheet (like the Chulalongkorn infographic) */
+  .cream-sheet {
+    position: relative;
+    flex: 1;
+    background: #fdf3ec;
+    border-radius: 34px;
+    padding: 30px 34px 26px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: space-between;
-    border-bottom: 2px solid rgba(200, 141, 116, 0.32);
-    padding-bottom: 14px;
-    z-index: 5;
-  }
-  .pill-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: linear-gradient(135deg, #be185d 0%, #9d174d 100%);
-    color: #ffffff;
-    padding: 7px 20px;
-    border-radius: 999px;
-    font-size: 18px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    box-shadow: 0 8px 20px rgba(190, 24, 93, 0.24);
-  }
-  .page-num-badge {
-    font-size: 20px;
-    font-weight: 700;
-    color: #b07256;
-    background: rgba(255, 255, 255, 0.85);
-    border: 1.5px solid #e2b6c6;
-    padding: 6px 18px;
-    border-radius: 999px;
-  }
-
-  /* Magazine Section Hero */
-  .hero-head {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 22px;
-    margin-top: 8px;
-    z-index: 5;
-  }
-  .big-num {
-    font-size: 92px;
-    font-weight: 800;
-    line-height: 0.9;
-    background: linear-gradient(135deg, #db2777 0%, #c88d74 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 8px 16px rgba(190, 24, 93, 0.16));
-  }
-  .hero-titles h1 {
-    font-size: 46px;
-    font-weight: 700;
-    color: #4a152e;
-    line-height: 1.15;
-    letter-spacing: -0.5px;
-  }
-  .hero-titles p {
-    font-size: 22px;
-    font-weight: 400;
-    color: #7a3e58;
-    margin-top: 6px;
-    line-height: 1.35;
-  }
-
-  /* 3D Dimensional Cards */
-  .card-3d {
-    background: rgba(255, 255, 255, 0.92);
-    border: 1.5px solid #f5cade;
-    border-radius: 24px;
     box-shadow:
-      0 22px 44px -12px rgba(131, 24, 67, 0.14),
-      0 6px 16px -4px rgba(131, 24, 67, 0.08),
-      inset 0 2px 0 #ffffff;
-    position: relative;
+      0 24px 48px -12px rgba(45, 27, 78, 0.28),
+      0 0 0 3px rgba(255, 255, 255, 0.45);
     overflow: hidden;
   }
 
-  .footer-bar {
+  /* Soft decorative pastel blobs inside sheet */
+  .cream-sheet::before {
+    content: "";
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(225, 79, 144, 0.08) 0%, transparent 70%);
+    top: -120px;
+    right: -100px;
+    pointer-events: none;
+  }
+
+  /* Royal Purple Top Pill Banner */
+  .purple-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 17px;
-    font-weight: 500;
-    color: #9c647b;
-    border-top: 1.5px solid rgba(200, 141, 116, 0.28);
-    padding-top: 12px;
+    gap: 16px;
     z-index: 5;
+  }
+  .purple-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #5e3c8f 0%, #7251a2 100%);
+    color: #ffffff;
+    padding: 10px 28px;
+    border-radius: 20px;
+    font-size: 26px;
+    font-weight: 700;
+    box-shadow: 0 10px 22px rgba(94, 60, 143, 0.28);
+  }
+  .purple-pill small {
+    font-size: 18px;
+    font-weight: 400;
+    color: #e9d8fd;
+  }
+  .page-badge {
+    background: #ffffff;
+    color: #5e3c8f;
+    border: 2px solid #d6c5ee;
+    padding: 8px 20px;
+    border-radius: 999px;
+    font-size: 20px;
+    font-weight: 700;
+    box-shadow: 0 6px 14px rgba(94, 60, 143, 0.12);
+    white-space: nowrap;
+  }
+
+  /* White-glow Magazine Display Title (like "เสี่ยงมะเร็ง จริงหรือไม่ ?") */
+  .display-pink {
+    font-size: 62px;
+    font-weight: 800;
+    line-height: 1.06;
+    color: #e14f90;
+    text-shadow:
+      0 3px 0 #ffffff,
+      0 -3px 0 #ffffff,
+      3px 0 0 #ffffff,
+      -3px 0 0 #ffffff,
+      3px 3px 0 #ffffff,
+      -3px -3px 0 #ffffff,
+      3px -3px 0 #ffffff,
+      -3px 3px 0 #ffffff,
+      0 10px 22px rgba(94, 60, 143, 0.22);
+  }
+  .display-sub {
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 1.15;
+    color: #3d2463;
+    text-shadow: 0 2px 0 #ffffff;
+  }
+
+  /* Tilted Answer Sticker */
+  .sticker-tag {
+    display: inline-block;
+    background: linear-gradient(135deg, #5e3c8f 0%, #482975 100%);
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 700;
+    padding: 5px 16px;
+    border-radius: 12px;
+    transform: rotate(-8deg);
+    box-shadow: 0 6px 14px rgba(72, 41, 117, 0.28);
+    border: 2px solid #ffffff;
+  }
+
+  /* Vibrant Pink Callout Ribbon */
+  .pink-ribbon {
+    position: relative;
+    background: linear-gradient(135deg, #e14f90 0%, #d4387d 100%);
+    color: #ffffff;
+    border-radius: 22px;
+    padding: 18px 26px;
+    box-shadow: 0 14px 28px rgba(225, 79, 144, 0.28);
+    border: 2.5px solid rgba(255, 255, 255, 0.75);
+    z-index: 5;
+  }
+
+  /* Purple Section Block (like "อาการโรคถุงน้ำในเต้านมที่พบบ่อย") */
+  .purple-section-banner {
+    background: linear-gradient(135deg, #6e4da0 0%, #583888 100%);
+    color: #ffffff;
+    border-radius: 24px;
+    padding: 20px 24px;
+    box-shadow: 0 14px 30px rgba(72, 41, 117, 0.24);
+    z-index: 5;
+  }
+  .white-pill-title {
+    display: inline-block;
+    background: #ffffff;
+    color: #3d2463;
+    font-size: 27px;
+    font-weight: 800;
+    padding: 6px 26px;
+    border-radius: 14px;
+    box-shadow: 0 6px 14px rgba(45, 27, 78, 0.16);
+  }
+
+  /* Dimensional White Cards */
+  .card-dim {
+    background: #ffffff;
+    border: 2px solid #edd9cc;
+    border-radius: 22px;
+    box-shadow:
+      0 14px 28px -8px rgba(72, 41, 117, 0.14),
+      0 4px 10px -2px rgba(72, 41, 117, 0.06);
+    position: relative;
+    z-index: 5;
+  }
+
+  .step-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #e14f90 0%, #c93275 100%);
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 800;
+    padding: 4px 16px;
+    border-radius: 999px;
+    box-shadow: 0 4px 10px rgba(225, 79, 144, 0.25);
+  }
+
+  .illu-frame {
+    border-radius: 22px;
+    overflow: hidden;
+    border: 3px solid #ffffff;
+    box-shadow: 0 14px 30px rgba(72, 41, 117, 0.16);
+    background: #fdf3ec;
+  }
+  .illu-frame img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .footer-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #e14f90 0%, #d4387d 100%);
+    color: #ffffff;
+    border-radius: 18px;
+    padding: 12px 24px;
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 14px;
+    box-shadow: 0 8px 18px rgba(72, 41, 117, 0.2);
+  }
+  .footer-cta {
+    background: #5e3c8f;
+    color: #ffffff;
+    padding: 4px 18px;
+    border-radius: 999px;
+    font-size: 17px;
+    font-weight: 700;
+    border: 1.5px solid rgba(255, 255, 255, 0.5);
   }
 </style>
 </head>
@@ -146,392 +235,278 @@
 
 <!-- ==================== PAGE 1: MAGAZINE COVER ==================== -->
 <div id="page-1" class="page">
-  <div class="frame-outer"></div>
-  <div class="frame-inner"></div>
-
-  <div style="text-align:center; margin-top: 12px; z-index:5;">
-    <div style="display:inline-flex; align-items:center; gap:12px; background:rgba(255,255,255,0.9); border:2px solid #c88d74; padding:10px 28px; border-radius:999px; box-shadow:0 10px 25px rgba(190,24,93,0.12);">
-      <span style="width:12px;height:12px;border-radius:50%;background:#db2777;display:inline-block;"></span>
-      <span style="font-size:20px;font-weight:700;color:#9d174d;letter-spacing:1px;">EXECUTIVE BREAST CENTER • คู่มือสำหรับผู้ป่วย</span>
+  <div class="cream-sheet">
+    <!-- Top Purple Banner -->
+    <div class="purple-header">
+      <div class="purple-pill">
+        <span>การเจาะชิ้นเนื้อเต้านม</span>
+        <small>(Core Needle Breast Biopsy)</small>
+      </div>
+      <div class="page-badge">หน้า 01 / 04</div>
     </div>
 
-    <h1 style="font-size:74px;font-weight:800;color:#4a152e;line-height:1.08;margin-top:24px;letter-spacing:-1px;text-shadow:0 4px 16px rgba(190,24,93,0.1);">
-      การเจาะชิ้นเนื้อเต้านม
-    </h1>
-    <div style="font-size:44px;font-weight:600;color:#be185d;line-height:1.2;margin-top:4px;">
-      เพื่อส่งตรวจทางพยาธิวิทยา
-    </div>
-    <div style="font-size:24px;font-weight:500;color:#b07256;margin-top:10px;letter-spacing:0.5px;">
-      IMAGE-GUIDED CORE NEEDLE BREAST BIOPSY
-    </div>
-  </div>
-
-  <!-- 3D Hero Illustration + Floating Dimensional Stat Badges -->
-  <div style="position:relative; height:640px; display:flex; align-items:center; justify-content:center; z-index:5;">
-    <!-- Central Hospital & Diagnostic Illustration Card -->
-    <div class="card-3d" style="width:880px; height:610px; background:linear-gradient(180deg, #fff9fb 0%, #fce7f3 100%); border:2.5px solid #e5b2c6; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px;">
-      <svg viewBox="0 0 800 470" width="780" height="450">
-        <defs>
-          <radialGradient id="glow1" cx="50%" cy="48%" r="50%">
-            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
-            <stop offset="65%" stop-color="#fbcfe8" stop-opacity="0.65"/>
-            <stop offset="100%" stop-color="#f9a8d4" stop-opacity="0"/>
-          </radialGradient>
-          <linearGradient id="roseGold" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#d49b7e"/>
-            <stop offset="50%" stop-color="#e8c5b0"/>
-            <stop offset="100%" stop-color="#b57659"/>
-          </linearGradient>
-          <linearGradient id="pinkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#ec4899"/>
-            <stop offset="100%" stop-color="#9d174d"/>
-          </linearGradient>
-          <filter id="sh1" x="-15%" y="-15%" width="130%" height="130%">
-            <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#831843" flood-opacity="0.18"/>
-          </filter>
-        </defs>
-
-        <!-- Glowing Halo Circles -->
-        <circle cx="400" cy="230" r="215" fill="url(#glow1)"/>
-        <circle cx="400" cy="230" r="185" fill="none" stroke="url(#roseGold)" stroke-width="2.5" stroke-dasharray="8 6"/>
-
-        <!-- Luxury Hospital Sanctuary Building (Left-Center) -->
-        <g filter="url(#sh1)">
-          <rect x="135" y="130" width="320" height="230" rx="22" fill="#ffffff" stroke="url(#roseGold)" stroke-width="3.5"/>
-          <!-- Roof Pediment -->
-          <rect x="195" y="95" width="200" height="46" rx="14" fill="#fdf2f8" stroke="url(#roseGold)" stroke-width="3"/>
-          <text x="295" y="125" text-anchor="middle" font-family="Kanit" font-size="20" font-weight="700" fill="#9d174d">BREAST CENTER</text>
-          <!-- Hospital Arched Windows -->
-          <rect x="165" y="165" width="52" height="125" rx="26" fill="#fce7f3" stroke="#f472b6" stroke-width="2"/>
-          <rect x="236" y="165" width="52" height="125" rx="26" fill="#fce7f3" stroke="#f472b6" stroke-width="2"/>
-          <rect x="307" y="165" width="52" height="125" rx="26" fill="#fce7f3" stroke="#f472b6" stroke-width="2"/>
-          <rect x="378" y="165" width="52" height="125" rx="26" fill="#fce7f3" stroke="#f472b6" stroke-width="2"/>
-          <!-- Entrance Canopy -->
-          <rect x="215" y="312" width="160" height="48" rx="10" fill="url(#pinkGrad)"/>
-          <text x="295" y="343" text-anchor="middle" font-family="Kanit" font-size="20" font-weight="600" fill="#ffffff">VIP SANCTUARY</text>
-        </g>
-
-        <!-- High-Precision Ultrasound & Core Needle Diagnostic Circle (Right-Overlap) -->
-        <g filter="url(#sh1)">
-          <circle cx="545" cy="245" r="135" fill="#ffffff" stroke="url(#roseGold)" stroke-width="4"/>
-          <circle cx="545" cy="245" r="116" fill="#fff5f9" stroke="#fbcfe8" stroke-width="2"/>
-          <!-- Ultrasound Probe at top -->
-          <rect x="510" y="138" width="70" height="26" rx="8" fill="#831843"/>
-          <path d="M 520 164 L 570 164 L 582 184 L 508 184 Z" fill="#be185d"/>
-          <!-- Ultrasound Waves -->
-          <path d="M 505 205 Q 545 230 585 205" fill="none" stroke="#f472b6" stroke-width="3" stroke-linecap="round"/>
-          <path d="M 488 232 Q 545 266 602 232" fill="none" stroke="#ec4899" stroke-width="3" stroke-linecap="round"/>
-          <path d="M 472 260 Q 545 302 618 260" fill="none" stroke="#db2777" stroke-width="2.5" stroke-dasharray="6 5" stroke-linecap="round"/>
-          <!-- Target Nodule & Precision Core Needle -->
-          <circle cx="545" cy="272" r="24" fill="#fbcfe8" stroke="#be185d" stroke-width="3"/>
-          <circle cx="545" cy="272" r="10" fill="#db2777"/>
-          <!-- Needle entering from right -->
-          <line x1="658" y1="228" x2="552" y2="270" stroke="#b57659" stroke-width="6" stroke-linecap="round"/>
-          <line x1="658" y1="228" x2="552" y2="270" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
-          <text x="545" y="338" text-anchor="middle" font-family="Kanit" font-size="21" font-weight="700" fill="#831843">แม่นยำด้วยอัลตราซาวด์</text>
-        </g>
-
-        <!-- Pink Ribbon Crest at Top Left -->
-        <g filter="url(#sh1)">
-          <circle cx="155" cy="115" r="54" fill="#ffffff" stroke="url(#roseGold)" stroke-width="3"/>
-          <path d="M 140 135 L 166 95 C 175 82, 135 82, 144 95 L 170 135" fill="none" stroke="#db2777" stroke-width="9" stroke-linecap="round"/>
-        </g>
-      </svg>
-
-      <div style="font-size:26px;font-weight:600;color:#6d2849;text-align:center;margin-top:-6px;">
-        เข้าใจทุกขั้นตอน • ลดความกังวล • ดูแลโดยทีมรังสีแพทย์เฉพาะทางเต้านม
+    <!-- Magazine Display Headline -->
+    <div style="text-align:center; position:relative; z-index:5; margin-top:4px;">
+      <div class="display-pink">เจ็บไหม ? อันตรายหรือไม่ ?</div>
+      <div style="display:flex; align-items:center; justify-content:center; gap:14px; margin-top:4px;">
+        <span class="sticker-tag">คำตอบ</span>
+        <span class="display-sub">ไม่น่ากลัวอย่างที่คิด • แผลเล็กเพียง 2–3 มม.</span>
+      </div>
+      <div style="font-size:22px; font-weight:500; color:#4f3575; margin-top:8px; line-height:1.38;">
+        เป็นหัตถการมาตรฐานสากลที่ใช้ <b>ภาพอัลตราซาวด์นำทาง</b> เก็บตัวอย่างเนื้อเยื่ออย่างแม่นยำ<br/>
+        โดยไม่ต้องผ่าตัดใหญ่ และไม่ต้องนอนโรงพยาบาล
       </div>
     </div>
 
-    <!-- Floating 3D Pill Badge Left -->
-    <div class="card-3d" style="position:absolute; left:10px; top:48px; padding:18px 26px; background:linear-gradient(135deg, #ffffff 0%, #fff0f6 100%); border:2.5px solid #c88d74; transform:rotate(-3deg);">
-      <div style="font-size:17px;font-weight:700;color:#be185d;">ขนาดแผลเจาะตรวจ</div>
-      <div style="font-size:48px;font-weight:800;color:#4a152e;line-height:1;">2–3 มม.</div>
-      <div style="font-size:18px;font-weight:500;color:#7a3e58;">ไม่ต้องเย็บแผล • ฟื้นตัวไว</div>
-    </div>
+    <!-- Nano Banana Hero Illustration -->
+    <div style="position:relative; display:flex; align-items:center; justify-content:center; margin:8px 0; z-index:5;">
+      <div class="illu-frame" style="width:940px; height:520px; border-radius:28px;">
+        <img src="illustrations/cover_hero.jpg" alt="Doctor explaining breast ultrasound biopsy to patient" style="object-position: center 22%;" />
+      </div>
 
-    <!-- Floating 3D Pill Badge Right -->
-    <div class="card-3d" style="position:absolute; right:10px; top:48px; padding:18px 26px; background:linear-gradient(135deg, #831843 0%, #be185d 100%); border:2.5px solid #e8c5b0; color:#fff; transform:rotate(2.5deg);">
-      <div style="font-size:17px;font-weight:600;color:#fbcfe8;">ความอุ่นใจของผู้ป่วย</div>
-      <div style="font-size:48px;font-weight:800;color:#ffffff;line-height:1;">&gt; 80%</div>
-      <div style="font-size:18px;font-weight:400;color:#fce7f3;">มักเป็นเนื้องอกธรรมดา ไม่ใช่เนื้อร้าย</div>
-    </div>
-  </div>
+      <!-- Floating Stat Pill Left -->
+      <div class="card-dim" style="position:absolute; left:10px; bottom:18px; padding:14px 22px; border:2.5px solid #e14f90; transform:rotate(-2deg);">
+        <div style="font-size:16px; font-weight:700; color:#e14f90;">ขนาดแผลเจาะตรวจ</div>
+        <div style="font-size:44px; font-weight:800; color:#3d2463; line-height:1;">2–3 มม.</div>
+        <div style="font-size:16px; font-weight:500; color:#5e3c8f;">ไม่ต้องเย็บแผล • ฟื้นตัวไว</div>
+      </div>
 
-  <!-- Bottom 3 Magazine Highlights Grid -->
-  <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; z-index:5;">
-    <div class="card-3d" style="padding:22px 24px; display:flex; align-items:center; gap:18px;">
-      <div style="width:62px;height:62px;border-radius:18px;background:#fce7f3;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;color:#be185d;flex-shrink:0;">01</div>
-      <div>
-        <div style="font-size:23px;font-weight:700;color:#4a152e;line-height:1.2;">ฉีดยาชาเฉพาะที่</div>
-        <div style="font-size:18px;color:#7a3e58;margin-top:2px;">ไม่เจ็บ ใช้เวลา 30–45 นาที</div>
+      <!-- Floating Stat Pill Right -->
+      <div style="position:absolute; right:10px; bottom:18px; padding:14px 22px; border-radius:22px; background:linear-gradient(135deg,#5e3c8f,#482975); color:#fff; border:2.5px solid #ffffff; box-shadow:0 14px 28px rgba(72,41,117,0.28); transform:rotate(2deg);">
+        <div style="font-size:16px; font-weight:600; color:#fbcfe8;">ใช้เวลาทั้งหมดเพียง</div>
+        <div style="font-size:44px; font-weight:800; color:#ffffff; line-height:1;">30–45 นาที</div>
+        <div style="font-size:16px; font-weight:400; color:#e9d8fd;">ฉีดยาชาเฉพาะที่ • กลับบ้านได้</div>
       </div>
     </div>
-    <div class="card-3d" style="padding:22px 24px; display:flex; align-items:center; gap:18px;">
-      <div style="width:62px;height:62px;border-radius:18px;background:#fce7f3;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;color:#be185d;flex-shrink:0;">02</div>
+
+    <!-- Vibrant Pink Reassurance Ribbon -->
+    <div class="pink-ribbon" style="display:flex; align-items:center; justify-content:space-between; gap:20px;">
       <div>
-        <div style="font-size:23px;font-weight:700;color:#4a152e;line-height:1.2;">ไม่ต้องนอน รพ.</div>
-        <div style="font-size:18px;color:#7a3e58;margin-top:2px;">พัก 15–30 นาที กลับบ้านได้</div>
+        <div style="font-size:28px; font-weight:800; line-height:1.18;">
+          &gt; 80% ของก้อนที่ส่งเจาะตรวจ มักเป็น “เนื้องอกธรรมดา” ไม่ใช่เนื้อร้าย
+        </div>
+        <div style="font-size:19px; font-weight:400; color:#ffe4f0; margin-top:2px;">
+          การตรวจชิ้นเนื้อช่วยให้ทราบผลที่แน่ชัด เพื่อวางแผนการดูแลรักษาได้อย่างถูกต้องและทันท่วงที
+        </div>
+      </div>
+      <div style="background:#ffffff; color:#d4387d; padding:10px 20px; border-radius:16px; font-size:20px; font-weight:800; white-space:nowrap; box-shadow:0 6px 14px rgba(0,0,0,0.12);">
+        รู้ผล 3–7 วัน
       </div>
     </div>
-    <div class="card-3d" style="padding:22px 24px; display:flex; align-items:center; gap:18px;">
-      <div style="width:62px;height:62px;border-radius:18px;background:#fce7f3;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;color:#be185d;flex-shrink:0;">03</div>
-      <div>
-        <div style="font-size:23px;font-weight:700;color:#4a152e;line-height:1.2;">รู้ผลใน 3–7 วัน</div>
-        <div style="font-size:18px;color:#7a3e58;margin-top:2px;">แม่นยำโดยพยาธิแพทย์</div>
+
+    <!-- Bottom 3 Quick Highlights -->
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; z-index:5;">
+      <div class="card-dim" style="padding:16px 18px; display:flex; align-items:center; gap:14px;">
+        <div style="width:52px;height:52px;border-radius:16px;background:#fce7f3;color:#e14f90;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;flex-shrink:0;">01</div>
+        <div>
+          <div style="font-size:21px;font-weight:700;color:#3d2463;">ฉีดยาชาเฉพาะที่</div>
+          <div style="font-size:16px;color:#5e3c8f;">รู้สึกเพียงแรงกดเบาๆ ไม่ปวด</div>
+        </div>
+      </div>
+      <div class="card-dim" style="padding:16px 18px; display:flex; align-items:center; gap:14px;">
+        <div style="width:52px;height:52px;border-radius:16px;background:#ede9fe;color:#5e3c8f;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;flex-shrink:0;">02</div>
+        <div>
+          <div style="font-size:21px;font-weight:700;color:#3d2463;">ไม่ต้องงดน้ำ-อาหาร</div>
+          <div style="font-size:16px;color:#5e3c8f;">ทานอาหารก่อนมาตรวจได้ปกติ</div>
+        </div>
+      </div>
+      <div class="card-dim" style="padding:16px 18px; display:flex; align-items:center; gap:14px;">
+        <div style="width:52px;height:52px;border-radius:16px;background:#dbeafe;color:#3b5bdb;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;flex-shrink:0;">03</div>
+        <div>
+          <div style="font-size:21px;font-weight:700;color:#3d2463;">ดูแลโดยแพทย์เฉพาะทาง</div>
+          <div style="font-size:16px;color:#5e3c8f;">รังสีแพทย์เฉพาะทางเต้านม</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="footer-bar">
-    <span>BREAST CARE SANCTUARY • PATIENT EDUCATION BROCHURE</span>
-    <span>หน้า 01 / 04</span>
+  <div class="footer-strip">
+    <span>คู่มือผู้ป่วย: การเจาะชิ้นเนื้อเต้านม (Breast Biopsy) • ศูนย์รักษ์เต้านม</span>
+    <span class="footer-cta">เปิดอ่านต่อ →</span>
   </div>
 </div>
 
 <!-- ==================== PAGE 2: OVERVIEW & PREPARATION ==================== -->
 <div id="page-2" class="page">
-  <div class="frame-outer"></div>
-  <div class="frame-inner"></div>
-
-  <div class="top-bar">
-    <span class="pill-tag">ส่วนที่ 1 • ความรู้เบื้องต้นและการเตรียมตัว</span>
-    <span class="page-num-badge">หน้า 02 / 04</span>
-  </div>
-
-  <div class="hero-head">
-    <div class="big-num">01</div>
-    <div class="hero-titles">
-      <h1>ทำไมต้องเจาะชิ้นเนื้อ และเตรียมตัวอย่างไร?</h1>
-      <p>วิธีมาตรฐานสากลในการวินิจฉัยก้อนหรือจุดหินปูนในเต้านมอย่างแม่นยำ โดยไม่ต้องผ่าตัดใหญ่</p>
+  <div class="cream-sheet">
+    <div class="purple-header">
+      <div class="purple-pill">
+        <span>ส่วนที่ 1 • ความรู้เบื้องต้นและการเตรียมตัว</span>
+      </div>
+      <div class="page-badge">หน้า 02 / 04</div>
     </div>
-  </div>
 
-  <!-- Explanatory Medical Diagram Card -->
-  <div class="card-3d" style="display:grid; grid-template-columns: 1.35fr 1fr; gap:24px; padding:26px 30px; align-items:center; background:linear-gradient(135deg, #ffffff 0%, #fff0f7 100%); z-index:5;">
-    <div style="display:flex; align-items:center; gap:22px;">
-      <svg viewBox="0 0 260 220" width="240" height="205" style="flex-shrink:0;">
-        <rect x="6" y="6" width="248" height="208" rx="22" fill="#fce7f3" stroke="#e2a9be" stroke-width="2"/>
-        <!-- Breast Contour Cross-Section -->
-        <path d="M 30 75 Q 130 35 230 75 L 230 195 L 30 195 Z" fill="#fff5f9" stroke="#d49bae" stroke-width="2.5"/>
-        <!-- Ultrasound Transducer on top -->
-        <rect x="95" y="25" width="70" height="30" rx="8" fill="#831843"/>
-        <text x="130" y="45" text-anchor="middle" font-family="Kanit" font-size="13" font-weight="600" fill="#fff">ULTRASOUND</text>
-        <!-- Sound waves -->
-        <path d="M 98 82 Q 130 102 162 82" fill="none" stroke="#ec4899" stroke-width="2.5"/>
-        <path d="M 85 105 Q 130 130 175 105" fill="none" stroke="#ec4899" stroke-width="2.5" stroke-dasharray="5 4"/>
-        <!-- Target Nodule -->
-        <ellipse cx="130" cy="142" rx="28" ry="20" fill="#f472b6" stroke="#9d174d" stroke-width="3"/>
-        <text x="130" y="147" text-anchor="middle" font-family="Kanit" font-size="13" font-weight="700" fill="#fff">ก้อนเนื้อ</text>
-        <!-- Core Needle entering -->
-        <line x1="242" y1="100" x2="142" y2="140" stroke="#b57659" stroke-width="6" stroke-linecap="round"/>
-        <circle cx="235" cy="103" r="6" fill="#be185d"/>
-        <text x="195" y="90" text-anchor="middle" font-family="Kanit" font-size="13" font-weight="700" fill="#831843">แผล 2–3 มม.</text>
-      </svg>
-      <div>
-        <div style="font-size:18px;font-weight:700;color:#be185d;letter-spacing:0.5px;">CORE NEEDLE BIOPSY</div>
-        <div style="font-size:30px;font-weight:700;color:#4a152e;line-height:1.2;margin:4px 0 10px;">เจาะแม่นยำ แผลจิ๋ว ไม่ต้องเย็บ</div>
-        <div style="font-size:20px;color:#6d3b53;line-height:1.4;">
-          แพทย์ใช้เข็มขนาดเล็ก (2–3 มม.) เก็บตัวอย่างเนื้อเยื่อภายใต้ภาพอัลตราซาวด์หรือแมมโมแกรม 3 มิติ
+    <div>
+      <div class="display-pink" style="font-size:48px;">ทำไมต้องเจาะชิ้นเนื้อเต้านม ?</div>
+      <div style="font-size:22px; font-weight:500; color:#4f3575; margin-top:4px;">
+        เมื่ออัลตราซาวด์หรือแมมโมแกรมพบก้อนหรือจุดหินปูน แพทย์จะเก็บตัวอย่างเนื้อเยื่อส่งตรวจทางพยาธิวิทยาเพื่อผลที่แม่นยำ 100%
+      </div>
+    </div>
+
+    <!-- Nano Banana Anatomical Diagram + Explanation -->
+    <div class="card-dim" style="display:grid; grid-template-columns: 330px 1fr; gap:26px; padding:22px 26px; align-items:center; border:2.5px solid #e1c8e8;">
+      <div class="illu-frame" style="width:320px; height:320px; border-radius:50%; border:5px solid #e14f90;">
+        <img src="illustrations/ultrasound_biopsy_diagram.jpg" alt="Ultrasound-guided core needle biopsy diagram" />
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div style="display:inline-block; align-self:flex-start; background:#fce7f3; color:#d4387d; padding:5px 16px; border-radius:999px; font-size:17px; font-weight:800;">
+          CORE NEEDLE BIOPSY • เจาะด้วยเข็มขนาดเล็ก
+        </div>
+        <div style="font-size:32px; font-weight:800; color:#3d2463; line-height:1.18;">
+          นำทางด้วยอัลตราซาวด์แบบ Real-time แม่นยำตรงจุด
+        </div>
+        <div style="font-size:20px; color:#4f3575; line-height:1.45;">
+          • <b>หัวตรวจอัลตราซาวด์</b> ช่วยให้แพทย์เห็นก้อนเนื้อชัดเจนตลอดเวลา<br/>
+          • <b>เข็มเจาะชิ้นเนื้อขนาดเล็ก (2–3 มม.)</b> เก็บตัวอย่างเนื้อเยื่อได้เพียงพอโดยไม่ต้องผ่าตัดเปิดแผล<br/>
+          • <b>ไม่ทำให้มะเร็งแพร่กระจาย</b> เป็นวิธีวินิจฉัยมาตรฐานที่ปลอดภัยทั่วโลก
         </div>
       </div>
     </div>
 
-    <!-- Right Dimensional Stat Box -->
-    <div style="background:linear-gradient(135deg, #831843 0%, #be185d 100%); border-radius:20px; padding:24px 26px; color:#fff; box-shadow:0 16px 32px rgba(131,24,67,0.25);">
-      <div style="font-size:18px;font-weight:600;color:#fbcfe8;">สถิติทางการแพทย์</div>
-      <div style="font-size:66px;font-weight:800;line-height:1;margin:6px 0;color:#ffffff;">&gt; 80%</div>
-      <div style="font-size:21px;font-weight:500;color:#fff5f8;line-height:1.35;">
-        ของก้อนที่ส่งเจาะตรวจ พบว่าเป็น <b>เนื้องอกธรรมดาหรือถุงน้ำ</b> ไม่ใช่เนื้อร้าย
+    <!-- Purple Section: Preparation Checklist -->
+    <div class="purple-section-banner">
+      <div style="text-align:center; margin-bottom:18px;">
+        <span class="white-pill-title">การเตรียมตัวก่อนมาเจาะชิ้นเนื้อเต้านม</span>
       </div>
+
+      <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:18px;">
+        <!-- Prep 1 -->
+        <div style="background:#fdf3ec; border-radius:20px; padding:20px 18px; color:#2d1b4e; display:flex; flex-direction:column; gap:10px; border-top:6px solid #e14f90;">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <span class="step-badge">ข้อที่ 1</span>
+            <span style="font-size:16px; font-weight:800; color:#d4387d; background:#fce7f3; padding:3px 12px; border-radius:999px;">5–7 วัน</span>
+          </div>
+          <div style="font-size:24px; font-weight:800; color:#3d2463; line-height:1.2;">แจ้งยาละลายลิ่มเลือด</div>
+          <div style="font-size:18.5px; color:#4f3575; line-height:1.4;">
+            หากทานยา <b>Aspirin, Plavix, Warfarin</b> หรือวิตามินน้ำมันปลา กรุณาแจ้งแพทย์ล่วงหน้าเพื่อพิจารณางดยา <b>5–7 วัน</b>
+          </div>
+        </div>
+
+        <!-- Prep 2 -->
+        <div style="background:#fdf3ec; border-radius:20px; padding:20px 18px; color:#2d1b4e; display:flex; flex-direction:column; gap:10px; border-top:6px solid #86a0db;">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <span class="step-badge" style="background:#5e3c8f;">ข้อที่ 2</span>
+            <span style="font-size:16px; font-weight:800; color:#047857; background:#d1fae5; padding:3px 12px; border-radius:999px;">ทานได้ปกติ</span>
+          </div>
+          <div style="font-size:24px; font-weight:800; color:#3d2463; line-height:1.2;">ไม่ต้องงดน้ำ-อาหาร</div>
+          <div style="font-size:18.5px; color:#4f3575; line-height:1.4;">
+            <b>รับประทานอาหารและยาประจำตัว</b> (เช่น ยาความดัน เบาหวาน) ได้ตามปกติ เพราะใช้เพียงยาชาเฉพาะที่
+          </div>
+        </div>
+
+        <!-- Prep 3 -->
+        <div style="background:#fdf3ec; border-radius:20px; padding:20px 18px; color:#2d1b4e; display:flex; flex-direction:column; gap:10px; border-top:6px solid #e14f90;">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <span class="step-badge">ข้อที่ 3</span>
+            <span style="font-size:16px; font-weight:800; color:#5e3c8f; background:#ede9fe; padding:3px 12px; border-radius:999px;">Sports Bra</span>
+          </div>
+          <div style="font-size:24px; font-weight:800; color:#3d2463; line-height:1.2;">การแต่งกายวันตรวจ</div>
+          <div style="font-size:18.5px; color:#4f3575; line-height:1.4;">
+            <b>งดทาแป้ง โลชั่น น้ำหอม โรลออน</b> บริเวณอก-รักแร้ สวมเสื้อผ้าแยกชิ้นบน-ล่าง และพก <b>Sports Bra</b> มาด้วย
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pink Bottom Reassurance Banner -->
+    <div class="pink-ribbon" style="display:flex; align-items:center; justify-content:space-between; padding:16px 24px;">
+      <div style="font-size:21px; font-weight:600;">
+        💡 แนะนำให้พาญาติหรือผู้ติดตามมาด้วย 1 ท่าน เพื่อช่วยดูแลและเดินทางกลับอย่างสบายใจ
+      </div>
+      <span style="background:#5e3c8f; padding:6px 18px; border-radius:999px; font-size:17px; font-weight:700; white-space:nowrap;">ใช้เวลา 30–45 นาที</span>
     </div>
   </div>
 
-  <!-- 3 Big Illustrated Preparation Cards -->
-  <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:22px; z-index:5;">
-    <!-- Prep 1 -->
-    <div class="card-3d" style="padding:26px 24px; display:flex; flex-direction:column; gap:14px; border-top:6px solid #db2777;">
-      <svg viewBox="0 0 120 100" width="110" height="92">
-        <circle cx="60" cy="50" r="44" fill="#fce7f3"/>
-        <!-- Pill Capsule -->
-        <g transform="rotate(-28 60 50)">
-          <rect x="28" y="36" width="32" height="28" rx="14" fill="#be185d"/>
-          <rect x="56" y="36" width="36" height="28" rx="14" fill="#ffffff" stroke="#be185d" stroke-width="3"/>
-        </g>
-        <circle cx="88" cy="26" r="16" fill="#e11d48"/>
-        <text x="88" y="32" text-anchor="middle" font-family="Kanit" font-size="16" font-weight="800" fill="#fff">5-7d</text>
-      </svg>
-      <div style="font-size:26px;font-weight:700;color:#4a152e;line-height:1.22;">1. แจ้งยาละลายลิ่มเลือด</div>
-      <div style="font-size:20px;color:#6d3b53;line-height:1.42;">
-        หากทานยา <b>Aspirin, Plavix, Warfarin</b> หรือวิตามินน้ำมันปลา ต้องแจ้งแพทย์ล่วงหน้าเพื่อพิจารณางดยา <b>5–7 วัน</b>
-      </div>
-    </div>
-
-    <!-- Prep 2 -->
-    <div class="card-3d" style="padding:26px 24px; display:flex; flex-direction:column; gap:14px; border-top:6px solid #c88d74;">
-      <svg viewBox="0 0 120 100" width="110" height="92">
-        <circle cx="60" cy="50" r="44" fill="#fdf2f8"/>
-        <!-- Plate & Cup Checkmark -->
-        <circle cx="52" cy="54" r="24" fill="#ffffff" stroke="#c88d74" stroke-width="3.5"/>
-        <circle cx="52" cy="54" r="14" fill="#fce7f3"/>
-        <rect x="82" y="36" width="18" height="28" rx="5" fill="#f472b6"/>
-        <circle cx="88" cy="24" r="15" fill="#10b981"/>
-        <path d="M 81 24 L 86 29 L 96 19" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
-      </svg>
-      <div style="font-size:26px;font-weight:700;color:#4a152e;line-height:1.22;">2. ไม่ต้องงดน้ำ-อาหาร</div>
-      <div style="font-size:20px;color:#6d3b53;line-height:1.42;">
-        <b>รับประทานอาหารและยาประจำตัวอื่นได้ตามปกติ</b> เนื่องจากการตรวจใช้เพียงการฉีดยาชาเฉพาะที่บริเวณเต้านม
-      </div>
-    </div>
-
-    <!-- Prep 3 -->
-    <div class="card-3d" style="padding:26px 24px; display:flex; flex-direction:column; gap:14px; border-top:6px solid #ec4899;">
-      <svg viewBox="0 0 120 100" width="110" height="92">
-        <circle cx="60" cy="50" r="44" fill="#fce7f3"/>
-        <!-- Supportive Bra / Two-piece icon -->
-        <path d="M 34 32 L 44 56 Q 60 66 76 56 L 86 32 L 76 32 L 70 48 Q 60 54 50 48 L 44 32 Z" fill="#db2777"/>
-        <rect x="36" y="58" width="48" height="12" rx="6" fill="#9d174d"/>
-      </svg>
-      <div style="font-size:26px;font-weight:700;color:#4a152e;line-height:1.22;">3. การแต่งกายวันตรวจ</div>
-      <div style="font-size:20px;color:#6d3b53;line-height:1.42;">
-        <b>งดทาแป้ง โลชั่น น้ำหอม หรือโรลออน</b> บริเวณอกและรักแร้ สวมเสื้อผ้าแยกชิ้นบน-ล่าง และพก <b>Sports Bra</b> มาสวมหลังตรวจ
-      </div>
-    </div>
-  </div>
-
-  <!-- Bottom Reassurance Pill Banner -->
-  <div class="card-3d" style="background:linear-gradient(135deg, #4a152e 0%, #831843 100%); padding:20px 30px; color:#fff; display:flex; align-items:center; justify-content:space-between; z-index:5;">
-    <div style="font-size:22px;font-weight:500;">
-      💡 <b style="color:#fbcfe8;">คำแนะนำเพิ่มเติม:</b> พาญาติหรือผู้ติดตามมาด้วย 1 ท่านเพื่อช่วยดูแลและเดินทางกลับอย่างสะดวกสบาย
-    </div>
-    <span style="background:rgba(255,255,255,0.16);padding:6px 16px;border-radius:999px;font-size:17px;font-weight:600;color:#fbcfe8;white-space:nowrap;">ใช้เวลาเพียง 30–45 นาที</span>
-  </div>
-
-  <div class="footer-bar">
+  <div class="footer-strip">
     <span>คู่มือผู้ป่วย: การเจาะชิ้นเนื้อเต้านม (Breast Biopsy)</span>
     <span>หน้า 02 / 04</span>
   </div>
 </div>
 
-<!-- ==================== PAGE 3: 4 STEPS OF THE PROCEDURE ==================== -->
+<!-- ==================== PAGE 3: 4 STEPS IN THE EXAM ROOM ==================== -->
 <div id="page-3" class="page">
-  <div class="frame-outer"></div>
-  <div class="frame-inner"></div>
-
-  <div class="top-bar">
-    <span class="pill-tag">ส่วนที่ 2 • ขั้นตอนในห้องตรวจ (STEP-BY-STEP)</span>
-    <span class="page-num-badge">หน้า 03 / 04</span>
-  </div>
-
-  <div class="hero-head">
-    <div class="big-num">02</div>
-    <div class="hero-titles">
-      <h1>4 ขั้นตอนการเจาะชิ้นเนื้อเต้านม</h1>
-      <p>ทำหัตถการโดยรังสีแพทย์เฉพาะทางเต้านม พร้อมภาพนำทางความละเอียดสูงตลอดทุกขั้นตอน</p>
+  <div class="cream-sheet">
+    <div class="purple-header">
+      <div class="purple-pill">
+        <span>ส่วนที่ 2 • ขั้นตอนในห้องตรวจ</span>
+        <small>(STEP-BY-STEP)</small>
+      </div>
+      <div class="page-badge">หน้า 03 / 04</div>
     </div>
-  </div>
 
-  <!-- 2x2 Magazine Storyboard Grid -->
-  <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:24px; z-index:5;">
-    <!-- STEP 1 -->
-    <div class="card-3d" style="padding:26px 28px; display:flex; flex-direction:column; gap:14px;">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span style="background:#fce7f3;color:#be185d;font-size:19px;font-weight:800;padding:6px 18px;border-radius:999px;border:1.5px solid #f472b6;">STEP 01</span>
-        <span style="font-size:18px;font-weight:600;color:#b07256;">5–10 นาที</span>
-      </div>
-      <div style="background:#fff5f9;border-radius:18px;padding:14px;display:flex;justify-content:center;border:1px solid #f5d0e0;">
-        <svg viewBox="0 0 360 150" width="340" height="142">
-          <!-- Monitor screen -->
-          <rect x="35" y="18" width="130" height="92" rx="10" fill="#4a152e" stroke="#c88d74" stroke-width="3"/>
-          <circle cx="100" cy="64" r="22" fill="#f472b6" opacity="0.85"/>
-          <circle cx="100" cy="64" r="32" fill="none" stroke="#fbcfe8" stroke-width="2" stroke-dasharray="4 4"/>
-          <line x1="68" y1="64" x2="132" y2="64" stroke="#fff" stroke-width="1.5"/>
-          <line x1="100" y1="32" x2="100" y2="96" stroke="#fff" stroke-width="1.5"/>
-          <rect x="85" y="110" width="30" height="16" fill="#c88d74"/>
-          <!-- Ultrasound hand probe -->
-          <rect x="215" y="34" width="90" height="32" rx="12" fill="#be185d"/>
-          <path d="M 225 78 Q 260 105 295 78" fill="none" stroke="#ec4899" stroke-width="3.5"/>
-          <path d="M 210 98 Q 260 132 310 98" fill="none" stroke="#f472b6" stroke-width="3" stroke-dasharray="6 4"/>
-        </svg>
-      </div>
-      <div style="font-size:28px;font-weight:700;color:#4a152e;line-height:1.2;">จัดท่าและระบุพิกัดก้อน</div>
-      <div style="font-size:20.5px;color:#6d3b53;line-height:1.42;">
-        นอนหงายหรือตะแคงบนเตียงตรวจ แพทย์ใช้ <b>อัลตราซาวด์หรือแมมโมแกรม 3 มิติ</b> ระบุตำแหน่งก้อนอย่างแม่นยำ
+    <div>
+      <div class="display-pink" style="font-size:48px;">4 ขั้นตอนการเจาะชิ้นเนื้อเต้านม</div>
+      <div style="font-size:21px; font-weight:500; color:#4f3575; margin-top:4px;">
+        ทำหัตถการโดยรังสีแพทย์เฉพาะทางเต้านม พร้อมทีมพยาบาลดูแลอย่างใกล้ชิดตลอดทุกขั้นตอน
       </div>
     </div>
 
-    <!-- STEP 2 -->
-    <div class="card-3d" style="padding:26px 28px; display:flex; flex-direction:column; gap:14px;">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span style="background:#fce7f3;color:#be185d;font-size:19px;font-weight:800;padding:6px 18px;border-radius:999px;border:1.5px solid #f472b6;">STEP 02</span>
-        <span style="font-size:18px;font-weight:600;color:#b07256;">3–5 นาที</span>
+    <!-- Nano Banana Procedure Scene Banner -->
+    <div class="illu-frame" style="height:310px; border-radius:24px; border:3px solid #ffffff;">
+      <img src="illustrations/procedure_scene.jpg" alt="Doctor performing ultrasound-guided breast checkup" style="object-position: center 35%;" />
+    </div>
+
+    <!-- 2x2 Purple/Cream Step Cards -->
+    <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:18px; z-index:5;">
+      <!-- STEP 1 -->
+      <div class="card-dim" style="padding:20px 22px; border-left:8px solid #5e3c8f;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span class="step-badge" style="background:#5e3c8f;">STEP 01</span>
+          <span style="font-size:16px; font-weight:700; color:#5e3c8f;">5–10 นาที</span>
+        </div>
+        <div style="font-size:26px; font-weight:800; color:#3d2463;">จัดท่าและระบุพิกัดก้อน</div>
+        <div style="font-size:19px; color:#4f3575; line-height:1.4; margin-top:4px;">
+          นอนหงายหรือตะแคงบนเตียงตรวจ แพทย์ใช้ <b>อัลตราซาวด์หรือแมมโมแกรม 3 มิติ</b> ระบุตำแหน่งก้อนอย่างแม่นยำ
+        </div>
       </div>
-      <div style="background:#fff5f9;border-radius:18px;padding:14px;display:flex;justify-content:center;border:1px solid #f5d0e0;">
-        <svg viewBox="0 0 360 150" width="340" height="142">
-          <!-- Protective Comfort Shield -->
-          <path d="M 180 18 L 245 40 L 245 86 C 245 120 180 140 180 140 C 180 140 115 120 115 86 L 115 40 Z" fill="#fce7f3" stroke="#db2777" stroke-width="3.5"/>
-          <text x="180" y="88" text-anchor="middle" font-family="Kanit" font-size="22" font-weight="700" fill="#9d174d">ชาเฉพาะที่</text>
-          <text x="180" y="112" text-anchor="middle" font-family="Kanit" font-size="16" font-weight="600" fill="#be185d">ไม่รู้สึกเจ็บ</text>
-        </svg>
+
+      <!-- STEP 2 -->
+      <div class="card-dim" style="padding:20px 22px; border-left:8px solid #e14f90;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span class="step-badge">STEP 02</span>
+          <span style="font-size:16px; font-weight:700; color:#e14f90;">3–5 นาที</span>
+        </div>
+        <div style="font-size:26px; font-weight:800; color:#3d2463;">ทำความสะอาดและฉีดยาชา</div>
+        <div style="font-size:19px; color:#4f3575; line-height:1.4; margin-top:4px;">
+          เช็ดทำความสะอาดผิวหนังและ <b>ฉีดยาชาเฉพาะที่ด้วยเข็มเล็ก</b> อาจแสบตึงเล็กน้อยช่วงแรก จากนั้นจะชาและไม่เจ็บ
+        </div>
       </div>
-      <div style="font-size:28px;font-weight:700;color:#4a152e;line-height:1.2;">ทำความสะอาดและฉีดยาชา</div>
-      <div style="font-size:20.5px;color:#6d3b53;line-height:1.42;">
-        เช็ดทำความสะอาดผิวหนังและ <b>ฉีดยาชาเฉพาะที่ด้วยเข็มเล็ก</b> อาจรู้สึกแสบตึงเล็กน้อยช่วงแรก จากนั้นจะชาและไม่เจ็บ
+
+      <!-- STEP 3 -->
+      <div class="card-dim" style="padding:20px 22px; border-left:8px solid #e14f90;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span class="step-badge">STEP 03</span>
+          <span style="font-size:16px; font-weight:700; color:#e14f90;">10–15 นาที</span>
+        </div>
+        <div style="font-size:26px; font-weight:800; color:#3d2463;">เก็บชิ้นเนื้อด้วยเข็มอัตโนมัติ</div>
+        <div style="font-size:19px; color:#4f3575; line-height:1.4; margin-top:4px;">
+          สอดเข็มผ่านรอยเปิด <b>2–3 มม.</b> จะได้ยินเสียง <b>“คลิก” เบาๆ 3–6 ครั้ง</b> รู้สึกเพียงแรงกดเบาๆ แต่ไม่ปวด
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="card-dim" style="padding:20px 22px; border-left:8px solid #5e3c8f;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span class="step-badge" style="background:#5e3c8f;">STEP 04</span>
+          <span style="font-size:16px; font-weight:700; color:#5e3c8f;">10–15 นาที</span>
+        </div>
+        <div style="font-size:26px; font-weight:800; color:#3d2463;">กดห้ามเลือดและปิดแผลกันน้ำ</div>
+        <div style="font-size:19px; color:#4f3575; line-height:1.4; margin-top:4px;">
+          กดห้ามเลือด 5–10 นาที ปิดด้วย <b>Steri-Strips และพลาสเตอร์กันน้ำ</b> ไม่ต้องเย็บแผล พักประคบเย็นแล้วกลับบ้านได้
+        </div>
       </div>
     </div>
 
-    <!-- STEP 3 -->
-    <div class="card-3d" style="padding:26px 28px; display:flex; flex-direction:column; gap:14px;">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span style="background:#fce7f3;color:#be185d;font-size:19px;font-weight:800;padding:6px 18px;border-radius:999px;border:1.5px solid #f472b6;">STEP 03</span>
-        <span style="font-size:18px;font-weight:600;color:#b07256;">10–15 นาที</span>
-      </div>
-      <div style="background:#fff5f9;border-radius:18px;padding:14px;display:flex;justify-content:center;border:1px solid #f5d0e0;">
-        <svg viewBox="0 0 360 150" width="340" height="142">
-          <!-- Automated Core Biopsy Device -->
-          <rect x="45" y="54" width="140" height="44" rx="12" fill="#831843" stroke="#c88d74" stroke-width="3"/>
-          <line x1="185" y1="76" x2="295" y2="76" stroke="#b57659" stroke-width="6" stroke-linecap="round"/>
-          <!-- Sound click waves -->
-          <circle cx="265" cy="44" r="26" fill="#fce7f3" stroke="#db2777" stroke-width="2.5"/>
-          <text x="265" y="51" text-anchor="middle" font-family="Kanit" font-size="18" font-weight="800" fill="#be185d">"คลิก"</text>
-          <text x="115" y="83" text-anchor="middle" font-family="Kanit" font-size="17" font-weight="600" fill="#fff">เก็บชิ้นเนื้อ 3–6 ครั้ง</text>
-        </svg>
-      </div>
-      <div style="font-size:28px;font-weight:700;color:#4a152e;line-height:1.2;">เก็บชิ้นเนื้อด้วยเข็มอัตโนมัติ</div>
-      <div style="font-size:20.5px;color:#6d3b53;line-height:1.42;">
-        สอดเข็มผ่านรอยเปิด <b>2–3 มม.</b> จะได้ยินเสียง <b>“คลิก” เบาๆ 3–6 ครั้ง</b> ขณะเก็บตัวอย่าง อาจรู้สึกถึงแรงกดแต่ไม่ปวด
-      </div>
-    </div>
-
-    <!-- STEP 4 -->
-    <div class="card-3d" style="padding:26px 28px; display:flex; flex-direction:column; gap:14px;">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span style="background:#fce7f3;color:#be185d;font-size:19px;font-weight:800;padding:6px 18px;border-radius:999px;border:1.5px solid #f472b6;">STEP 04</span>
-        <span style="font-size:18px;font-weight:600;color:#b07256;">10–15 นาที</span>
-      </div>
-      <div style="background:#fff5f9;border-radius:18px;padding:14px;display:flex;justify-content:center;border:1px solid #f5d0e0;">
-        <svg viewBox="0 0 360 150" width="340" height="142">
-          <!-- Waterproof Steri-Strip Dressing -->
-          <rect x="85" y="34" width="190" height="82" rx="22" fill="#ffffff" stroke="#c88d74" stroke-width="3" stroke-dasharray="7 5"/>
-          <rect x="125" y="52" width="110" height="46" rx="12" fill="#fce7f3" stroke="#ec4899" stroke-width="2.5"/>
-          <text x="180" y="82" text-anchor="middle" font-family="Kanit" font-size="19" font-weight="700" fill="#9d174d">พลาสเตอร์กันน้ำ</text>
-        </svg>
-      </div>
-      <div style="font-size:28px;font-weight:700;color:#4a152e;line-height:1.2;">กดห้ามเลือดและปิดแผล</div>
-      <div style="font-size:20.5px;color:#6d3b53;line-height:1.42;">
-        กดห้ามเลือด 5–10 นาที ปิดด้วย <b>Steri-Strips และพลาสเตอร์กันน้ำ</b> โดยไม่ต้องเย็บแผล พักประคบเย็นแล้วกลับบ้านได้
+    <!-- Titanium Clip Reassurance Banner -->
+    <div class="purple-section-banner" style="padding:16px 24px; display:flex; align-items:center; justify-content:space-between;">
+      <div style="font-size:20px; font-weight:500;">
+        ✨ <b>กรณีรอยโรคขนาดเล็กมาก:</b> แพทย์อาจวางคลิปไทเทเนียมจิ๋ว (2 มม.) เพื่อระบุตำแหน่งเดิมโดยปลอดภัย 100%
       </div>
     </div>
   </div>
 
-  <!-- Bottom Callout Banner -->
-  <div class="card-3d" style="background:linear-gradient(135deg, #be185d 0%, #831843 100%); padding:20px 30px; color:#fff; display:flex; align-items:center; justify-content:space-between; z-index:5;">
-    <div style="font-size:22px;font-weight:500;">
-      ✨ <b style="color:#fbcfe8;">กรณีพบรอยโรคขนาดเล็กมาก:</b> แพทย์อาจวางคลิปไทเทเนียมจิ๋ว (2 มม.) เพื่อระบุตำแหน่งเดิมโดยไม่เป็นอันตรายต่อร่างกาย
-    </div>
-  </div>
-
-  <div class="footer-bar">
+  <div class="footer-strip">
     <span>คู่มือผู้ป่วย: การเจาะชิ้นเนื้อเต้านม (Breast Biopsy)</span>
     <span>หน้า 03 / 04</span>
   </div>
@@ -539,118 +514,84 @@
 
 <!-- ==================== PAGE 4: AFTERCARE & WARNING SIGNS ==================== -->
 <div id="page-4" class="page">
-  <div class="frame-outer"></div>
-  <div class="frame-inner"></div>
-
-  <div class="top-bar">
-    <span class="pill-tag">ส่วนที่ 3 • การดูแลตนเองหลังตรวจ (AFTERCARE)</span>
-    <span class="page-num-badge">หน้า 04 / 04</span>
-  </div>
-
-  <div class="hero-head">
-    <div class="big-num">03</div>
-    <div class="hero-titles">
-      <h1>การดูแลแผลและอาการที่ควรสังเกต</h1>
-      <p>ปฏิบัติตามคำแนะนำในช่วง 48 ชั่วโมงแรก เพื่อให้แผลหายเร็ว ลดรอยช้ำ และป้องกันภาวะแทรกซ้อน</p>
-    </div>
-  </div>
-
-  <!-- 2x2 Big Aftercare Infographic Grid -->
-  <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:22px; z-index:5;">
-    <!-- Aftercare 1 -->
-    <div class="card-3d" style="padding:24px 26px; display:flex; gap:20px; align-items:center;">
-      <div style="width:94px;height:94px;border-radius:24px;background:linear-gradient(135deg,#e0f2fe,#bae6fd);border:2px solid #38bdf8;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;">
-        <span style="font-size:34px;line-height:1;">❄️</span>
-        <span style="font-size:15px;font-weight:800;color:#0369a1;margin-top:4px;">24 ชม. แรก</span>
+  <div class="cream-sheet">
+    <div class="purple-header">
+      <div class="purple-pill">
+        <span>ส่วนที่ 3 • การดูแลตนเองหลังตรวจ</span>
+        <small>(AFTERCARE)</small>
       </div>
-      <div>
-        <div style="font-size:26px;font-weight:700;color:#4a152e;">1. ประคบเย็นลดบวมช้ำ</div>
-        <div style="font-size:19.5px;color:#6d3b53;line-height:1.38;margin-top:4px;">
-          ใช้เจลเย็นห่อผ้าสะอาดประคบทับบริเวณแผล <b>ครั้งละ 15 นาที</b> ทุก 2–3 ชั่วโมงในวันแรก
-        </div>
-      </div>
+      <div class="page-badge">หน้า 04 / 04</div>
     </div>
 
-    <!-- Aftercare 2 -->
-    <div class="card-3d" style="padding:24px 26px; display:flex; gap:20px; align-items:center;">
-      <div style="width:94px;height:94px;border-radius:24px;background:linear-gradient(135deg,#fce7f3,#fbcfe8);border:2px solid #f472b6;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;">
-        <span style="font-size:34px;line-height:1;">💧</span>
-        <span style="font-size:15px;font-weight:800;color:#be185d;margin-top:4px;">24–48 ชม.</span>
-      </div>
-      <div>
-        <div style="font-size:26px;font-weight:700;color:#4a152e;">2. ระวังแผลโดนน้ำ</div>
-        <div style="font-size:19.5px;color:#6d3b53;line-height:1.38;margin-top:4px;">
-          อาบน้ำได้หากพลาสเตอร์กันน้ำปิดสนิท <b>งดแช่น้ำหรือว่ายน้ำ 7 วัน</b> จนกว่าแผลจะปิดสนิท
-        </div>
-      </div>
-    </div>
-
-    <!-- Aftercare 3 -->
-    <div class="card-3d" style="padding:24px 26px; display:flex; gap:20px; align-items:center;">
-      <div style="width:94px;height:94px;border-radius:24px;background:linear-gradient(135deg,#fef3c7,#fde68a);border:2px solid #f59e0b;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;">
-        <span style="font-size:34px;line-height:1;">💊</span>
-        <span style="font-size:15px;font-weight:800;color:#b45309;margin-top:4px;">ยาแก้ปวด</span>
-      </div>
-      <div>
-        <div style="font-size:26px;font-weight:700;color:#4a152e;">3. ทานพาราเซตามอล</div>
-        <div style="font-size:19.5px;color:#6d3b53;line-height:1.38;margin-top:4px;">
-          หากปวดตึงแผลให้ทาน <b>Paracetamol</b> <b style="color:#e11d48;">งด Aspirin / Ibuprofen</b> ใน 48 ชม. แรก
-        </div>
-      </div>
-    </div>
-
-    <!-- Aftercare 4 -->
-    <div class="card-3d" style="padding:24px 26px; display:flex; gap:20px; align-items:center;">
-      <div style="width:94px;height:94px;border-radius:24px;background:linear-gradient(135deg,#f3e8ff,#e9d5ff);border:2px solid #c084fc;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;">
-        <span style="font-size:34px;line-height:1;">👚</span>
-        <span style="font-size:15px;font-weight:800;color:#7e22ce;margin-top:4px;">2–3 วันแรก</span>
-      </div>
-      <div>
-        <div style="font-size:26px;font-weight:700;color:#4a152e;">4. สวมบราพยุงเต้านม</div>
-        <div style="font-size:19.5px;color:#6d3b53;line-height:1.38;margin-top:4px;">
-          สวมเสื้อชั้นในที่กระชับ (Sports Bra) และ <b>งดยกของหนักหรือออกกำลังกายหนัก 2–3 วัน</b>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Pathology Follow-up Timeline Card -->
-  <div class="card-3d" style="padding:24px 30px; background:linear-gradient(135deg, #fff9fb 0%, #fce7f3 100%); border:2px solid #c88d74; display:flex; align-items:center; justify-content:space-between; z-index:5;">
     <div>
-      <div style="font-size:18px;font-weight:700;color:#be185d;">PATHOLOGY REPORT &amp; FOLLOW-UP</div>
-      <div style="font-size:28px;font-weight:700;color:#4a152e;margin-top:2px;">5. การนัดฟังผลตรวจทางพยาธิวิทยา</div>
-      <div style="font-size:20px;color:#6d3b53;margin-top:4px;">
-        รอยเขียวช้ำเล็กน้อยบริเวณเต้านมเป็นอาการปกติและจะจางหายเองใน 1–2 สัปดาห์
+      <div class="display-pink" style="font-size:46px;">การดูแลแผลและอาการที่ควรสังเกต</div>
+      <div style="font-size:21px; font-weight:500; color:#4f3575; margin-top:2px;">
+        ปฏิบัติตามคำแนะนำในช่วง 48 ชั่วโมงแรก เพื่อให้แผลหายเร็ว ลดรอยช้ำ และป้องกันภาวะแทรกซ้อน
       </div>
     </div>
-    <div style="background:#831843;color:#fff;padding:16px 26px;border-radius:18px;text-align:center;flex-shrink:0;">
-      <div style="font-size:16px;color:#fbcfe8;">ทราบผลภายใน</div>
-      <div style="font-size:38px;font-weight:800;line-height:1.1;">3–7 วัน</div>
-      <div style="font-size:15px;color:#fce7f3;">วันทำการ</div>
+
+    <!-- Top Split: Nano Banana Aftercare Illustration + 4 Key Rules -->
+    <div style="display:grid; grid-template-columns: 380px 1fr; gap:20px; align-items:stretch; z-index:5;">
+      <div class="illu-frame" style="border-radius:24px; height:100%; background:#fdf3ec; display:flex; align-items:center; justify-content:center;">
+        <img src="illustrations/aftercare_scene.jpg" alt="Doctor advising patient on breast biopsy aftercare" style="object-fit: contain; width:100%; height:100%;" />
+      </div>
+
+      <div style="display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
+        <div class="card-dim" style="padding:14px 18px; border-left:7px solid #86a0db;">
+          <div style="font-size:22px; font-weight:800; color:#3d2463;">1. ประคบเย็น 24 ชั่วโมงแรก</div>
+          <div style="font-size:18px; color:#4f3575;">ใช้เจลเย็นห่อผ้าสะอาดประคบทับ <b>ครั้งละ 15 นาที</b> ทุก 2–3 ชม. ลดบวมและรอยช้ำ</div>
+        </div>
+        <div class="card-dim" style="padding:14px 18px; border-left:7px solid #e14f90;">
+          <div style="font-size:22px; font-weight:800; color:#3d2463;">2. ระวังแผลโดนน้ำ 24–48 ชม.</div>
+          <div style="font-size:18px; color:#4f3575;">อาบน้ำได้หากพลาสเตอร์กันน้ำปิดสนิท <b>งดแช่น้ำหรือว่ายน้ำ 7 วัน</b></div>
+        </div>
+        <div class="card-dim" style="padding:14px 18px; border-left:7px solid #5e3c8f;">
+          <div style="font-size:22px; font-weight:800; color:#3d2463;">3. ทานพาราเซตามอล (งด NSAIDs)</div>
+          <div style="font-size:18px; color:#4f3575;">หากปวดตึงทาน <b>Paracetamol</b> <b style="color:#d4387d;">งด Aspirin / Ibuprofen 48 ชม.</b></div>
+        </div>
+        <div class="card-dim" style="padding:14px 18px; border-left:7px solid #e14f90;">
+          <div style="font-size:22px; font-weight:800; color:#3d2463;">4. สวม Sports Bra 2–3 วันแรก</div>
+          <div style="font-size:18px; color:#4f3575;">ช่วยพยุงเต้านมลดการขยับ และ <b>งดยกของหนักหรือออกกำลังกายหนัก</b></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pathology Report Timeline -->
+    <div class="purple-section-banner" style="display:flex; align-items:center; justify-content:space-between; gap:20px; padding:18px 24px;">
+      <div>
+        <div style="font-size:24px; font-weight:800;">5. การนัดฟังผลตรวจทางพยาธิวิทยา</div>
+        <div style="font-size:18.5px; color:#e9d8fd; margin-top:2px;">
+          รอยเขียวช้ำเล็กน้อยบริเวณเต้านมเป็นอาการปกติและจะค่อยๆ จางหายเองภายใน 1–2 สัปดาห์
+        </div>
+      </div>
+      <div style="background:#e14f90; color:#ffffff; padding:10px 24px; border-radius:16px; text-align:center; flex-shrink:0; border:2px solid #ffffff;">
+        <div style="font-size:15px;">ทราบผลภายใน</div>
+        <div style="font-size:34px; font-weight:800; line-height:1.05;">3–7 วัน</div>
+      </div>
+    </div>
+
+    <!-- Red-Flag Warning Banner -->
+    <div class="card-dim" style="padding:18px 22px; background:#fff1f5; border:2.5px solid #e11d48;">
+      <div style="font-size:23px; font-weight:800; color:#be123c; margin-bottom:10px;">
+        ⚠️ อาการผิดปกติที่ควรติดต่อศูนย์รักษ์เต้านมหรือโรงพยาบาลทันที
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px;">
+        <div style="background:#ffffff; border:1.5px solid #fda4af; border-radius:14px; padding:12px 14px; font-size:17.5px; font-weight:600; color:#881337;">
+          🩸 เลือดซึมชุ่มพลาสเตอร์ไม่หยุด หลังกดห้ามเลือด 15 นาที
+        </div>
+        <div style="background:#ffffff; border:1.5px solid #fda4af; border-radius:14px; padding:12px 14px; font-size:17.5px; font-weight:600; color:#881337;">
+          🍒 เต้านมบวมตึงโตขึ้นเร็วผิดปกติ หรือปวดรุนแรงมากขึ้น
+        </div>
+        <div style="background:#ffffff; border:1.5px solid #fda4af; border-radius:14px; padding:12px 14px; font-size:17.5px; font-weight:600; color:#881337;">
+          🌡️ แผลบวมแดงร้อน มีหนองซึม หรือมีไข้สูง
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- High-Contrast 3D Red-Flag Warning Card -->
-  <div class="card-3d" style="padding:24px 30px; background:linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); border:2.5px solid #f43f5e; z-index:5;">
-    <div style="font-size:25px;font-weight:800;color:#be123c;display:flex;align-items:center;gap:10px;">
-      <span>⚠️ อาการผิดปกติที่ควรติดต่อศูนย์เต้านมหรือโรงพยาบาลทันที</span>
-    </div>
-    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin-top:14px;">
-      <div style="background:#ffffff;border:1.5px solid #fda4af;border-radius:14px;padding:14px 16px;font-size:19px;font-weight:600;color:#881337;">
-        🩸 เลือดซึมชุ่มพลาสเตอร์ไม่หยุด หลังกดห้ามเลือดนาน 15 นาที
-      </div>
-      <div style="background:#ffffff;border:1.5px solid #fda4af;border-radius:14px;padding:14px 16px;font-size:19px;font-weight:600;color:#881337;">
-        🍒 เต้านมบวมตึงโตขึ้นเร็วผิดปกติ หรือปวดรุนแรงมากขึ้น
-      </div>
-      <div style="background:#ffffff;border:1.5px solid #fda4af;border-radius:14px;padding:14px 16px;font-size:19px;font-weight:600;color:#881337;">
-        🌡️ แผลบวมแดงร้อน มีหนองซึม หรือมีไข้สูง
-      </div>
-    </div>
-  </div>
-
-  <div class="footer-bar">
-    <span>คู่มือผู้ป่วย: การเจาะชิ้นเนื้อเต้านม (Breast Biopsy)</span>
-    <span>หน้า 04 / 04</span>
+  <div class="footer-strip">
+    <span>มั่นใจกับความรู้สุขภาพ • คู่มือผู้ป่วยศูนย์รักษ์เต้านม</span>
+    <span class="footer-cta">หน้า 04 / 04</span>
   </div>
 </div>
 
