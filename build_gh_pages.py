@@ -41,10 +41,10 @@ def build_static_site() -> None:
 
     # 4. Write index.html with relative asset paths (./static/...) + PDF.js CDN for client-side PDF uploads
     html = (BASE_DIR / "templates" / "index.html").read_text(encoding="utf-8")
-    html = html.replace('href="/static/style.css"', 'href="./static/style.css?v=12"')
+    html = html.replace('href="/static/style.css"', 'href="./static/style.css?v=13"')
     html = html.replace(
         '<script src="/static/app.js"></script>',
-        '<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>\n  <script src="./static/static-shim.js?v=12"></script>\n  <script src="./static/app.js?v=12"></script>',
+        '<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>\n  <script src="./static/static-shim.js?v=13"></script>\n  <script src="./static/app.js?v=13"></script>',
     )
     (DOCS_DIR / "index.html").write_text(html, encoding="utf-8")
 

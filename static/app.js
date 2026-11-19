@@ -131,6 +131,7 @@
 
     el("icon-zoom-in").classList.toggle("hidden", state.zoom >= 2.2);
     el("icon-zoom-out").classList.toggle("hidden", state.zoom < 2.2);
+    if (typeof showZoomHud === "function") showZoomHud(state.zoom);
   }
 
   function resetZoom() {
@@ -294,6 +295,9 @@
 
     updateHash();
     pushSessionHeartbeat();
+    el("book-cover-frame").style.setProperty("--flip", "0");
+    if (typeof syncEditorialDock === "function") syncEditorialDock(state.currentPage, total);
+    if (typeof renderAiContextChips === "function") renderAiContextChips(state.currentPage);
   }
 
   const imgCache = new Map();
@@ -439,6 +443,8 @@
     const vx = ox - px;
     const vy = cy - py;
     const dist = Math.hypot(vx, vy);
+    const flipProgress = Math.min(1, Math.max(0, dist / Math.max(1, pageW * 2)));
+    el("book-cover-frame").style.setProperty("--flip", Math.sin(flipProgress * Math.PI).toFixed(3));
     if (dist < 1.5) {
       drawPageOrPaper(frontImg, pageStartX, 0, pageW, totalH, true);
       return;
@@ -1395,6 +1401,7 @@
       if (!document.hidden) pollSession();
     });
 
+    window.__runAiPrompt = runAiCoReader;
     async function runAiCoReader(promptText) {
       if (!state.book) return;
       toggleNotesPanel(true);
@@ -1692,7 +1699,166 @@
     window.addEventListener("resize", renderBookSpread);
   }
 
+  let zoomHudTimer = null;
+  function showZoomHud(scale) {
+    const hud = el("zoom-hud");
+    const val = el("zoom-hud-val");
+    if (!hud || !val) return;
+    val.textContent = `${Math.round(scale * 100)}%`;
+    hud.classList.add("is-on");
+    clearTimeout(zoomHudTimer);
+    zoomHudTimer = setTimeout(() => hud.classList.remove("is-on"), 1400);
+  }
+
+  function syncEditorialDock(page, total) {
+    const range = el("page-range");
+    const cur = el("dock-pg-cur");
+    const tot = el("dock-pg-tot");
+    const dPrev = el("dock-prev");
+    const dNext = el("dock-next");
+    if (!range) return;
+    range.max = String(Math.max(1, total));
+    range.value = String(page);
+    const pct = total > 1 ? ((page - 1) / (total - 1)) * 100 : 100;
+    range.style.setProperty("--p", `${pct}%`);
+    if (cur) cur.textContent = String(page);
+    if (tot) tot.textContent = String(total);
+    if (dPrev) dPrev.disabled = page <= 1;
+    if (dNext) dNext.disabled = page >= total;
+  }
+
+  const PAGE_AI_CHIPS = {
+    1: [
+      { label: "เจ็บไหม?", prompt: "เจาะชิ้นเนื้อเต้านมเจ็บไหม และฉีดยาชาช่วยอย่างไร" },
+      { label: "ใช้เวลานานเท่าไร?", prompt: "ขั้นตอนทั้งหมดใช้เวลากี่นาที และกลับบ้านได้เลยไหม" },
+      { label: "ส่วนใหญ่เป็นเนื้อร้ายไหม?", prompt: "โอกาสที่ก้อนจะไม่ใช่เนื้อร้ายมีมากน้อยแค่ไหน" },
+    ],
+    2: [
+      { label: "ต้องงดน้ำ-อาหารไหม?", prompt: "ก่อนมาตรวจต้องงดน้ำและอาหารหรือไม่" },
+      { label: "ยาละลายลิ่มเลือด", prompt: "ถ้าทานยาละลายลิ่มเลือดหรือวิตามินต้องทำอย่างไร" },
+      { label: "วันตรวจแต่งตัวอย่างไร?", prompt: "วันมาตรวจควรเตรียมเสื้อผ้าหรือ Sports Bra อย่างไร" },
+    ],
+    3: [
+      { label: "เสียงคลิกคืออะไร?", prompt: "เสียงคลิกเบาๆ ระหว่างเก็บชิ้นเนื้อคืออะไร น่ากลัวไหม" },
+      { label: "วางคลิปไทเทเนียม?", prompt: "คลิปไทเทเนียมจิ๋ว 2 มม. ปลอดภัยไหม และใช้ทำอะไร" },
+      { label: "ต้องเย็บแผลไหม?", prompt: "แผลขนาด 2-3 มม. ต้องเย็บแผลหรือไม่" },
+    ],
+    4: [
+      { label: "อาบน้ำได้เมื่อไร?", prompt: "หลังเจาะชิ้นเนื้อกี่ชั่วโมงจึงจะอาบน้ำได้" },
+      { label: "ปวดกินยาอะไรได้บ้าง?", prompt: "หลังตรวจทานยาแก้ปวดตัวไหนได้ และห้ามทานยาอะไร" },
+      { label: "อาการที่ต้องรีบพบแพทย์", prompt: "อาการผิดปกติแบบไหนที่ต้องติดต่อโรงพยาบาลทันที" },
+    ],
+  };
+
+  function renderAiContextChips(page) {
+    const box = el("ai-context-chips");
+    if (!box) return;
+    box.innerHTML = "";
+    const chips = PAGE_AI_CHIPS[page] || PAGE_AI_CHIPS[1];
+    chips.forEach((c) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "ai-context-chip";
+      btn.textContent = c.label;
+      btn.addEventListener("click", () => {
+        const presetBtn = document.querySelector(`[data-ai-prompt]`);
+        if (typeof window.__runAiPrompt === "function") {
+          window.__runAiPrompt(c.prompt);
+        } else if (presetBtn) {
+          el("note-text").value = c.prompt;
+        }
+      });
+      box.appendChild(btn);
+    });
+  }
+
+  function initEditorialUX() {
+    // 1. Reading-Lamp Mode
+    const lampBtn = el("btn-lamp");
+    const applyTheme = (theme) => {
+      if (theme === "lamp") {
+        document.documentElement.dataset.theme = "lamp";
+        if (lampBtn) lampBtn.setAttribute("aria-pressed", "true");
+      } else {
+        delete document.documentElement.dataset.theme;
+        if (lampBtn) lampBtn.setAttribute("aria-pressed", "false");
+      }
+    };
+    try {
+      applyTheme(localStorage.getItem("vb_theme") || "");
+    } catch (_) {}
+    if (lampBtn) {
+      lampBtn.addEventListener("click", () => {
+        const next = document.documentElement.dataset.theme === "lamp" ? "" : "lamp";
+        applyTheme(next);
+        try { localStorage.setItem("vb_theme", next); } catch (_) {}
+      });
+    }
+
+    // 2. Floating Dock Scrubber
+    const range = el("page-range");
+    const peek = el("scrubber-peek");
+    const dPrev = el("dock-prev");
+    const dNext = el("dock-next");
+    if (dPrev) dPrev.addEventListener("click", () => el("btn-prev").click());
+    if (dNext) dNext.addEventListener("click", () => el("btn-next").click());
+    if (range) {
+      range.addEventListener("input", (e) => {
+        const p = Number(e.target.value);
+        const total = state.book ? state.book.page_count : 1;
+        const pct = total > 1 ? ((p - 1) / (total - 1)) * 100 : 100;
+        range.style.setProperty("--p", `${pct}%`);
+        if (peek && state.book && state.book.pages[p - 1]) {
+          peek.querySelector("img").src = state.book.pages[p - 1].thumb_url || state.book.pages[p - 1].image_url;
+          peek.querySelector("span").textContent = `Page ${p}`;
+          peek.classList.remove("hidden");
+        }
+      });
+      range.addEventListener("change", (e) => {
+        if (peek) peek.classList.add("hidden");
+        goToPage(Number(e.target.value));
+      });
+    }
+
+    // 3. Zoom HUD controls
+    const zOut = el("zoom-hud-out");
+    const zIn = el("zoom-hud-in");
+    const zFit = el("zoom-hud-fit");
+    if (zOut) zOut.addEventListener("click", () => {
+      state.zoom = Math.max(1, Number((state.zoom - 0.25).toFixed(2)));
+      if (state.zoom === 1) { state.panX = 0; state.panY = 0; }
+      applyZoomTransform();
+    });
+    if (zIn) zIn.addEventListener("click", () => {
+      state.zoom = Math.min(2.6, Number((state.zoom + 0.25).toFixed(2)));
+      applyZoomTransform();
+    });
+    if (zFit) zFit.addEventListener("click", () => resetZoom());
+
+    // 4. Auto-hide chrome after 3.5s idle reading
+    let idleTimer = null;
+    const topbar = el("top");
+    const dock = el("reader-dock");
+    const wakeChrome = () => {
+      if (topbar) topbar.classList.remove("is-idle");
+      if (dock) dock.classList.remove("is-idle");
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        const anyOpen = document.querySelector(".sidebar:not(.hidden), .modal-backdrop:not(.hidden)");
+        if (!anyOpen && state.zoom <= 1) {
+          if (topbar) topbar.classList.add("is-idle");
+          if (dock) dock.classList.add("is-idle");
+        }
+      }, 3500);
+    };
+    ["pointermove", "pointerdown", "keydown"].forEach((evt) => {
+      window.addEventListener(evt, wakeChrome, { passive: true });
+    });
+    wakeChrome();
+  }
+
   async function init() {
+    initEditorialUX();
     bindEvents();
     await refreshBookList();
     const { bookId, page } = parseHash();
